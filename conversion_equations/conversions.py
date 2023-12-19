@@ -1,18 +1,20 @@
 import pandas
 from pandas import DataFrame
+from Filter.filter import Filter
 
 
-class conversions:
+class Conversions:
 
     LINPOT_CONVERSION_CONSTANT = 15.0
     LINPOT_CONVERSION_OFFSET = 75.0
     ACCEL_G_CONSTANT = 1.0
+    FL_CORNER_WEIGHT = 150.0
+    FR_CORNER_WEIGHT = 150.0
+    RL_CORNER_WEIGHT = 150.0
+    RR_CORNER_WEIGHT = 150.0
 
     def __init__(self):
-        df_accel = pandas.read_csv("")  # base volatage for accelerometer
-        # base volatage for linear potentiometers
-        def_linpots = pandas.read_csv("")
-        # initlaize with base line voltages for x, y, and z
+        pass
 
     def calculate_acceleration_conversion_factors(self):
         # calculate the variables for each axis
@@ -23,7 +25,7 @@ class conversions:
         # calculate the variable for each axis
         pass
 
-    def convert_to_gs(self):
+    def convert_to_gs(self) -> DataFrame:
         # convert the voltage to gs
         pass
 
@@ -32,6 +34,3 @@ class conversions:
 
     def calculate_wheel_load(self):
         pass
-
-    # def apply_low_pass_filter(self):
-    #     pass

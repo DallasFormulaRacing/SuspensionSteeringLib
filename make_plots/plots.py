@@ -2,7 +2,7 @@ import pandas
 import conversion_equations.conversions as conversions
 
 
-class plots:
+class Plots:
 
     def __init__(self):
         pass

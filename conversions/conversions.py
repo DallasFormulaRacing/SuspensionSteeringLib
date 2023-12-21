@@ -1,6 +1,5 @@
 import pandas
 from pandas import DataFrame
-from Filter.filter import Filter
 
 
 class Conversions:
@@ -14,15 +13,6 @@ class Conversions:
     RR_CORNER_WEIGHT = 150.0
 
     def __init__(self):
-        pass
-
-    def calculate_acceleration_conversion_factors(self):
-        # calculate the variables for each axis
-        pass
-
-    def calculate_baseline_accel(self, x, y, z):
-        # average the first 20 values from each axis
-        # calculate the variable for each axis
         pass
 
     def convert_to_gs(self) -> DataFrame:

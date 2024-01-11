@@ -3,7 +3,9 @@ This repository contains Python scripts developed by Dallas Formula Racing for t
 
 # Sensor Data Sheets
 Analog Acel: https://www.analog.com/media/en/technical-documentation/data-sheets/adxl335.pdf
+
 Digital Acel: https://www.adafruit.com/product/4438
+
 Linpot: https://www.pegasusautoracing.com/productselection.asp?Product=MC-206&utm_source=google&utm_medium=cpc&utm_campaign=MC-206&gad_source=1&gclid=Cj0KCQiAy9msBhD0ARIsANbk0A8R3RR0sLIwCP6Y3Wp2lnhvHBwkFSwJzNTXNTJI-pUplBrkuiK3jzgaAv8YEALw_wcB
 
 The vehicle has four linpots, one on each wheel, and two analog accelerometers, one above each axle. The two analog accelerometers are in the process of being replaced for digital ones. 

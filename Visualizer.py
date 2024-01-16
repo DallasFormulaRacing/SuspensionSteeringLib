@@ -6,14 +6,23 @@ import pandas as pd
 class Visualizer:
 
     def __init__(self, data: pd.DataFrame):
-        self.wheel_load_df = data
+        self.df = data
+
+    def plot1(self, columns): 
+        Force_FL = columns[0]
+        Accel = columns[4]
+        fig1 = px.scatter(self.wheel_load_df, x=Accel,
+                         y=Force_FL)
+        fig1.show()
 
     def plot(self, columns): 
-        F_FL = columns[0]
-        Accel = columns[4]
-        fig1 = px.scatter(self.wheel_load_df, x=F_FL,
-                         y=Accel)
-        fig1.show()
+        print(len(columns))
+        for column in columns:
+            print(column, "here")
+            fig = px.scatter(self.df, x=self.df[column], y=self.df[self.df.columns[-1]])
+            fig.show()
+        #fig1 = px.scatter(self.wheel_load_df, x=Accel,y=Force_FL)
+        #fig1.show()
 
     def plot_wheel_load_vs_time(self) -> None:
         fig1 = px.scatter(self.wheel_load_df, x="time",

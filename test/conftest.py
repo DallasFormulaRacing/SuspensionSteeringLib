@@ -1,4 +1,4 @@
-from WheelLoadHandler import WheelLoad
+from Depreciated.WheelLoadHandler import WheelLoad
 import pytest
 
 @pytest.fixture

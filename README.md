@@ -24,3 +24,60 @@ Handler/handler.py: main function of the library
 - implement the init(), convert_to_gs(), convert_voltage_to_mm(), and calculate_wheel_load() functions for the Conversions class in conversions/conversions.py
 - implement the init(), plot_acceleration_vs_time(), def_plot_linpot_vs_time(), plot_wheel_load_vs_time(), and plot_acceleration_vs_wheel_load() functions for the Plots class in make_plots/plots.py
 - implement the linpot_data_transformation() class in handler.py
+
+# Current UML Diagram / Design
+
+```mermaid
+classDiagram
+
+class  handler  {
+
++susp_steering_df:  DataFrame
+
+}
+
+class calculations {
+    calculateWheelLoad():  float[]
+    calculateDamperPlots(): void
+    calculateOverSteerUnderSteer():  void
+}
+
+class Filter {
+    apply_low_pass_filter() : void
+}
+class conversions  {
++data:  DataFrame
+calculateWheelLoadConsts() : float[]
++VOLTAGE_TO_GS_CONVERSION_FACTOR: float
+convert_voltage_to_gs() : void
++VOLTS_TO_MM_CONVERSION_FACTOR : float
++VOLTS_TO_MM_OFFSET : float
++MM_TO_IN_CONVERSION_FACTOR : float
+convert_voltage_to_in() : void
+convert_time() : void
+}
+
+
+
+class  Visualizer  {
++df : DataFrame
+plot()  :  void
+
+}
+
+class  make_plot {
+plotDamperPlots()
+plotWheelLoadVSTime()
+PlotWheelLoadVSAccel()
+plotAccelVSTime()
+plotUnderSteer()
+plotOverSteer()
+}
+
+handler  <|--  calculations
+handler  <|--  conversions
+make_plot <|--  Visualizer
+
+handler <|--  make_plot
+conversions <|-- Filter
+```

@@ -32,4 +32,4 @@ class handler:
     calculations.calculate_force_rear_left()
     calculations.calculate_force_rear_right()
 
-    plots.plot_wheel_load_vs_time(calculations)   
+    plots.plot_wheel_load_vs_time(calculations)

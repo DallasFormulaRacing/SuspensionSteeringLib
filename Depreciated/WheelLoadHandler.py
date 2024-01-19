@@ -6,10 +6,10 @@ SPRING_RATE_FRONT = 200.0
 SPRING_RATE_REAR = 175.0
 MOTION_RATIO_FRONT = 0.907
 MOTION_RATIO_REAR = 0.87
-SPRING_RATE_roll_front = 150.0 # guestimate Todo replace with real values
-SPRING_RATE_roll_rear = 150.0 # guestimate Todo replace with real values
-MOTION_RATIO_roll_front = 0.9 # Estimate
-MOTION_RATIO_roll_rear = 0.9 # Estimate
+SPRING_RATE_ROLL_FRONT = 150.0 # guestimate Todo replace with real values
+SPRING_RATE_ROLL_REAR = 150.0 # guestimate Todo replace with real values
+MOTION_RATIO_ROLL_FRONT = 0.9 # Estimate
+MOTION_RATIO_ROLL_REAR = 0.9 # Estimate
 CORNER_WEIGHT_LF = 150.0 
 CORNER_WEIGHT_RF = 150.0
 CORNER_WEIGHT_RL = 150.0
@@ -18,25 +18,8 @@ CORNER_WEIGHT_RR = 150.0
 class WheelLoad:
    def __init__(self, filename: str ):
         self.filename = filename
-        #self.df = pd.DataFrame(pd.read_csv(filename))
         self.data = pd.DataFrame(pd.read_csv(self.filename))
         self.switch_columns()
-        print(self.data)
-        #self.convert_voltage_to_mm()
-        #self.calculate_consts()
-        #self.calculate_force_equations()
-        #self.plot_wheel_load_vs_time()
-        #self.WR_F = 0.0
-        #self.WR_R = 0.0
-        #self.WR_Rollf = 0.0
-        #self.WR_Rollr = 0.0
-        #self.K_H = 0.0
-        #self.K_P = 0.0
-        #self.K_W = 0.0
-        #self.K_R = 0.0
-        #self.q = 0.0
-        #self.w = 0.0
-
    def switch_columns(self):
         self.data = self.data.rename(
             columns={
@@ -52,6 +35,7 @@ class WheelLoad:
             self.data.loc[i, "Front Left"] = -(row["Front Left"] * 15.0) + 75.0
             self.data.loc[i, "Rear Right"] = -(row["Rear Right"] * 15.0) + 75.0
             self.data.loc[i, "Rear Left"] = -(row["Rear Left"] * 15.0) + 75.0
+
    def calculate_wheeel_ratio_front(self) -> float:
      self.wheel_ratio_front = (SPRING_RATE_FRONT)/(MOTION_RATIO_FRONT ** 2)
      return self.wheel_ratio_front
@@ -61,12 +45,12 @@ class WheelLoad:
      return self.wheel_ratio_rear
    
    def calculate_wheel_ratio_Rollf(self) -> float:
-     self.wheel_ratio_Roll_front = (SPRING_RATE_Roll_front)/(MOTION_RATIO_Roll_front ** 2)
-     return self.wheel_ratio_Roll_front
+     self.wheel_ratio_roll_front = (SPRING_RATE_ROLL_FRONT)/(MOTION_RATIO_ROLL_FRONT ** 2)
+     return self.wheel_ratio_roll_front
    
    def calculate_wheel_ratio_Rollr(self) -> float:
-     self.wheel_ratio_Roll_rear = (SPRING_RATE_Roll_rear)/(MOTION_RATIO_Roll_rear ** 2)
-     return self.wheel_ratio_Roll_rear
+     self.wheel_ratio_roll_rear = (SPRING_RATE_ROLL_REAR)/(MOTION_RATIO_ROLL_REAR ** 2)
+     return self.wheel_ratio_roll_rear
    
    def calculate_K_H_K_P(self) -> float:
      self.K_H = 0.5 * ( self.wheel_ratio_front + self.wheel_ratio_rear)
@@ -74,7 +58,7 @@ class WheelLoad:
      return self.K_H
    
    def calculate_K_R_K_W(self) -> float:
-     self.K_R = 0.5 * ( self.wheel_ratio_front + 2 * self.wheel_ratio_Roll_front) + 0.5 * ( self.wheel_ratio_rear + 2 * self.wheel_ratio_Roll_rear)
+     self.K_R = 0.5 * ( self.wheel_ratio_front + 2 * self.wheel_ratio_roll_front) + 0.5 * ( self.wheel_ratio_rear + 2 * self.wheel_ratio_Roll_rear)
      self.K_W = self.K_R
      return self.K_R
    def calculate_a_b(self) -> float:
@@ -90,8 +74,8 @@ class WheelLoad:
    def calculate_consts(self) -> list:
         self.WR_F = (SPRING_RATE_FRONT)/(MOTION_RATIO_FRONT ** 2)
         self.WR_R = (SPRING_RATE_REAR)/(MOTION_RATIO_REAR ** 2)
-        self.WR_Rollf = (SPRING_RATE_Roll_front) / (MOTION_RATIO_Roll_front ** 2)
-        self.WR_Rollr = (SPRING_RATE_Roll_rear) / (MOTION_RATIO_Roll_rear ** 2)
+        self.WR_Rollf = (SPRING_RATE_ROLL_FRONT) / (MOTION_RATIO_ROLL_FRONT ** 2)
+        self.WR_Rollr = (SPRING_RATE_ROLL_REAR) / (MOTION_RATIO_ROLL_REAR ** 2)
         self.K_H = 0.5 * ( self.WR_F + self.WR_R)
         self.K_P = self.K_H
         self.K_R = 0.5 * ( self.WR_F + 2 * self.WR_Rollf) + 0.5 * ( self.WR_R + 2 * self.WR_Rollr)
@@ -112,7 +96,7 @@ class WheelLoad:
    def plot_wheel_load_vs_acceleration(self):
         columns = [self.data["Force_LF"], self.data["Force_RF"], self.data["Force_RR"], self.data["Force_LR"], self.data["acceleration"]]
         Visualizer.Visualize.plot(columns)
-        #return ""
+
    def plot_wheel_load_vs_time(self):
         columns = [self.data["Force_LF"], self.data["Force_RF"], self.data["Force_RR"], self.data["Force_LR"], self.data["time"]]
         Visualizer.Visualize.plot(columns)

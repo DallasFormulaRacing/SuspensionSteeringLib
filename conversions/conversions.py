@@ -2,7 +2,7 @@ import pandas as pd
 from pandas import DataFrame
 import time
 from Filter import Filter
-from conversion_factor_enum import Constants as constants
+from conversions.conversion_factor_enum import Constants as constants
 
 # Add dampening to factor into the wheel loads. Depends on the velocity
 # Dampening is proportional to velocity and it's a linear relationship
@@ -42,6 +42,10 @@ class Conversions:
                                               constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
             self.data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+
+    # fill out method for converting voltage to mm
+    def convert_voltage_to_mm(self):
+        pass
 
     def clean_data(self):
         filter = Filter.Filter()

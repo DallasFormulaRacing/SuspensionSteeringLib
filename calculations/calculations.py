@@ -7,7 +7,7 @@ class Calculations:
     def __init__(self, filename: str):
         self.linpot_dataframe = pd.DataFrame(pd.read_csv(filename))
 
-    def calculate_displacement(self) -> float:
+    def calculate_displacement(self) -> pd.DataFrame:
         self.linpot_dataframe['Displacement Front Right'] = self.linpot_dataframe['Front Right'].diff(
         ).fillna(0)
         self.linpot_dataframe['Displacement Front Left'] = self.linpot_dataframe['Front Left'].diff(
@@ -17,14 +17,21 @@ class Calculations:
         self.linpot_dataframe['Displacement Rear Left'] = self.linpot_dataframe['Rear Left'].diff(
         ).fillna(0)
 
-        print(self.linpot_dataframe)
+        # self.linpot_dataframe.to_csv('fake_csv.csv')
 
         return self.linpot_dataframe
 
+    # move over time method
     def calculate_time_constant(self) -> float:
         pass
 
-    def calculate_velocities(self) -> pd.DataFrame:
+    def calculate_velocities(self, displacements: pd.DataFrame, time_const: float) -> pd.DataFrame:
+        # apply to each column you need to convert
+        for i, row in self.linpot_dataframe.itterows():
+            pass
+
+    # put in math for finding velocity, return velocity
+    def calculate_velocity(self) -> float:
         pass
 
     def calculate_forces_part_1(self) -> float:

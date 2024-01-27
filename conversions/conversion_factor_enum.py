@@ -1,7 +1,8 @@
 from enum import Enum
 
+
 class Constants(float, Enum):
     LINPOT_CONVERSION_CONSTANT = 15.0
     LINPOT_CONVERSION_OFFSET = 75.0
     MM_TO_IN_CONVERSION_FACTOR = 0.0393701
-    ACCEL_G_CONSTANT = 1.0 
+    ACCEL_G_CONSTANT = 1.0

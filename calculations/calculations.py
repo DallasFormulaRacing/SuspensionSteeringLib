@@ -8,7 +8,7 @@ class Calculations:
     def __init__(self, filename: str):
         self.linpot_dataframe = pd.DataFrame(pd.read_csv(filename))
 
-    def calculate_displacement(self) -> float:
+    def calculate_displacement(self) -> pd.DataFrame:
         self.linpot_dataframe['Displacement Front Right'] = self.linpot_dataframe['Front Right'].diff(
         ).fillna(0)
         self.linpot_dataframe['Displacement Front Left'] = self.linpot_dataframe['Front Left'].diff(
@@ -25,7 +25,7 @@ class Calculations:
     def calculate_time_constant(self) -> float:
         pass
 
-    def calculate_velocities(self) -> pd.DataFrame:
+    def calculate_velocities(self, displacements, time_const) -> pd.DataFrame:
         pass
 
     def calculate_forces_part_1(self) -> float:

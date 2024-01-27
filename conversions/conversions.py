@@ -2,7 +2,6 @@ import pandas as pd
 from pandas import DataFrame
 import plotly.express as px
 import time
-from sklearn.cluster import KMeans
 from Filter import Filter
 from conversions import conversion_factor_enum
 

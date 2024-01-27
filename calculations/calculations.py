@@ -1,5 +1,4 @@
 import pandas as pd
-import time
 from constant_enum import Constants as constants
 
 
@@ -18,14 +17,21 @@ class Calculations:
         self.linpot_dataframe['Displacement Rear Left'] = self.linpot_dataframe['Rear Left'].diff(
         ).fillna(0)
 
-        print(self.linpot_dataframe)
+        # self.linpot_dataframe.to_csv('fake_csv.csv')
 
         return self.linpot_dataframe
 
+    # move over time method
     def calculate_time_constant(self) -> float:
         pass
 
-    def calculate_velocities(self, displacements, time_const) -> pd.DataFrame:
+    def calculate_velocities(self, displacements: pd.DataFrame, time_const: float) -> pd.DataFrame:
+        # apply to each column you need to convert
+        for i, row in self.linpot_dataframe.itterows():
+            pass
+
+    # put in math for finding velocity, return velocity
+    def calculate_velocity(self) -> float:
         pass
 
     def calculate_forces_part_1(self) -> float:

@@ -35,22 +35,28 @@ class Calculations:
         pass
 
     def calculate_forces_part_1(self) -> float:
-        return self.K_H * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] + self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"])
+        return self.K_H * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] +
+                           self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"])
 
     def calculate_forces_part_2(self) -> float:
-        return self.K_P * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] - self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"])
+        return self.K_P * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] -
+                           self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"])
 
     def calculate_forces_part_3_front(self) -> float:
-        return self.K_R * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] + self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"]) * self.q
+        return self.K_R * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] +
+                           self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"]) * self.q
 
     def calculate_forces_part_3_rear(self) -> float:
-        return self.K_R * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] + self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"]) * (1 - self.q)
+        return self.K_R * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] +
+                           self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"]) * (1 - self.q)
 
     def calculate_forces_part_4_front(self) -> float:
-        return self.K_W * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] - self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"]) * (1 - self.w)
+        return self.K_W * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] -
+                           self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"]) * (1 - self.w)
 
     def calculate_forces_part_4_rear(self) -> float:
-        return self.K_W * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] - self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"]) * self.w
+        return self.K_W * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] -
+                           self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"]) * self.w
 
     def calculate_force_front_left(self) -> float:
         self.data["Force Front Left"] = constants.CORNER_WEIGHT_LF + 0.25 * (self.calculate_forces_part_1(

@@ -1,7 +1,7 @@
 import pandas as pd
 from pandas import DataFrame
 import time
-from Filter import Filter
+from Filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
 
 # Add dampening to factor into the wheel loads. Depends on the velocity
@@ -48,11 +48,11 @@ class Conversions:
         pass
 
     def clean_data(self):
-        filter = Filter.Filter()
-        self.data = filter.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
-        self.data = filter.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
-        self.data = filter.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)
-        self.data = filter.butter_lowpass_filter(self.data, "Rear Left", 4, 30, 2)
+        filter_instance = Filter()
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Left", 4, 30, 2)
 
     def convert_to_gs(self) -> DataFrame:
         # convert the voltage to gs

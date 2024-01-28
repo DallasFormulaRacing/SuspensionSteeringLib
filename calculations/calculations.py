@@ -1,5 +1,5 @@
 import pandas as pd
-from constant_enum import Constants as constants
+from calculations.constant_enum import Constants as constants
 
 
 class Calculations:

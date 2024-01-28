@@ -3,7 +3,7 @@ from calculations.calculations import Calculations
 from plots import make_plot
 
 conversions = Conversions("data\output2_linpot_2023-10-14_13-23-28.csv")
-calculations = Calculations()
+calculations = Calculations("data\output2_linpot_2023-10-14_13-23-28.csv")
 plots = make_plot.make_plot()
 
 
@@ -40,3 +40,11 @@ class handler:
         displacement_df = calculations.calculate_displacement()
         time_constant = calculations.calculate_time_constant()
         velocity_df = calculations.calculate_velocities(displacement_df, time_constant)
+
+
+def main():
+    handler_instance = handler()
+    handler.wheel_load_handler()
+
+if __name__ == '__main__':
+    main()

@@ -25,14 +25,12 @@ class handler:
         calculations.calculate_K_R_K_W()
         calculations.calculate_a_b()
         calculations.calculate_q_w()
-        try:
-            # calculates wheel load formulas in pounds of force
-            calculations.calculate_force_front_left()
-            calculations.calculate_force_front_right()
-            calculations.calculate_force_rear_left()
-            calculations.calculate_force_rear_right()
-        except Exception:
-            traceback.print_exc()
+
+        # calculates wheel load formulas in pounds of force
+        calculations.calculate_force_front_left()
+        calculations.calculate_force_front_right()
+        calculations.calculate_force_rear_left()
+        calculations.calculate_force_rear_right()
 
         plots = make_plot(calculations.data)
         # plots.plot_wheel_load_vs_acceleration()
@@ -48,10 +46,9 @@ class handler:
 
 def main():
     handler_instance = handler()
-    handler_instance.wheel_load_handler()
     try:
-        print("")
-        # handler_instance.wheel_damper_handler()
+        handler_instance.wheel_load_handler()
+        handler_instance.wheel_damper_handler()
     except Exception:
         traceback.print_exc()
 

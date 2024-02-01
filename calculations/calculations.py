@@ -124,7 +124,7 @@ class Calculations:
 
 def main():
     # Replace with your actual filename
-    filename = 'data/output2_linpot_2023-10-14_13-23-28.csv'
+    filename = 'data\\output2_linpot_2023-10-14_13-23-28.csv'
     calculations = Calculations(filename)
     df_with_displacement = calculations.calculate_displacement()
     print(df_with_displacement)

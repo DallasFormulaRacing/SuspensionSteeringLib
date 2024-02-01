@@ -1,7 +1,6 @@
 import pandas as pd
 from pandas import DataFrame
 import time
-import traceback
 from filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
 
@@ -34,44 +33,35 @@ class Conversions:
 
     # converts voltage to mm and then inches for as spring rates are in inches / pound
     def convert_voltage_to_in(self):
-        try: 
-            for i, row in self.data.iterrows():
-                self.data.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                   constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-                self.data.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                  constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-                self.data.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                  constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-                self.data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                 constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-        except Exception:
-            traceback.print_exc()
-            print("Data in csv file is not right")
+        for i, row in self.data.iterrows():
+            self.data.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                               constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            self.data.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            self.data.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            self.data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                             constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+
     # fill out method for converting voltage to mm
     def convert_voltage_to_mm(self):
         pass
 
     def clean_data(self):
         filter_instance = Filter()
-        try:
-            self.data = filter_instance.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
-            self.data = filter_instance.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
-            self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)
-            self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Left", 4, 30, 2)
-        except Exception:
-            traceback.print_exc()
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)
+        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Left", 4, 30, 2)
 
     def convert_to_gs(self) -> DataFrame:
         # convert the voltage to gs
         pass
 
     def convert_time(self, data):
-        try:
-            for i, row in data.iterrows():
-                time_step = row["Time"]
-                mlsec = repr(time_step).split(".")[1][:3]
-                data.loc[i, "Time"] = time.strftime(
-                    "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step)
-                )
-        except Exception:
-            traceback.print_exc()
+        for i, row in data.iterrows():
+            time_step = row["Time"]
+            mlsec = repr(time_step).split(".")[1][:3]
+            data.loc[i, "Time"] = time.strftime(
+                "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step)
+            )

@@ -1,7 +1,8 @@
 import pandas as pd
+from pandas import DataFrame
 import time
-from Filter import Filter
-from conversions import conversion_factor_enum
+from filter.filter import Filter
+from conversions.conversion_factor_enum import Constants as constants
 
 # Add dampening to factor into the wheel loads. Depends on the velocity
 # Dampening is proportional to velocity and it's a linear relationship
@@ -32,7 +33,6 @@ class Conversions:
 
     # converts voltage to mm and then inches for as spring rates are in inches / pound
     def convert_voltage_to_in(self):
-        constants = conversion_factor_enum.Constants
         for i, row in self.data.iterrows():
             self.data.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
                                                constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR

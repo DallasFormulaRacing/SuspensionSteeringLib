@@ -1,5 +1,4 @@
 import pandas as pd
-from pandas import DataFrame
 import time
 from filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
@@ -44,7 +43,7 @@ class Conversions:
                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
 
     def clean_data(self):
-        filter = Filter.Filter()
+        filter = Filter()
         self.data = filter.butter_lowpass_filter(
             self.data, "Front Right", 4, 30, 2)
         self.data = filter.butter_lowpass_filter(

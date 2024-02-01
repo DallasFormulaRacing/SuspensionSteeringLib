@@ -3,8 +3,8 @@ from calculations.calculations import Calculations
 from plots.make_plot import make_plot
 import traceback
 
-conversions = Conversions("data\\output2_linpot_2023-10-14_13-23-28.csv")
-calculations = Calculations("data\\output2_linpot_2023-10-14_13-23-28.csv")
+conversions = Conversions("data/output2_linpot_2023-10-14_13-23-28.csv")
+calculations = Calculations("data/output2_linpot_2023-10-14_13-23-28.csv")
 
 
 class handler:

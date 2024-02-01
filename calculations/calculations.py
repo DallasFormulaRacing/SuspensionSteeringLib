@@ -1,5 +1,5 @@
 import pandas as pd
-from calculations.constant_enum import Constants as constants
+from calculations.constant_enum_23 import Constants as constants
 
 
 class Calculations:
@@ -124,9 +124,10 @@ class Calculations:
 
 def main():
     # Replace with your actual filename
-    filename = 'data/output2_linpot_2023-10-14_13-23-28.csv'
+    filename = 'data\\output2_linpot_2023-10-14_13-23-28.csv'
     calculations = Calculations(filename)
     df_with_displacement = calculations.calculate_displacement()
+    print(df_with_displacement)
 
 
 # Ensures that the main function is called only when this script is executed directly (not imported as a module)

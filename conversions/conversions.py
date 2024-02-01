@@ -1,7 +1,7 @@
 import pandas as pd
 from pandas import DataFrame
 import time
-from Filter.filter import Filter
+from filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
 
 # Add dampening to factor into the wheel loads. Depends on the velocity

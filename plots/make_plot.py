@@ -2,6 +2,7 @@ from visualizer import Visualizer
 
 
 class make_plot:
+
     def __init__(self, data):
         self.vis = Visualizer(data) 
 
@@ -16,3 +17,4 @@ class make_plot:
         x_columns = ["X", "Y", "Z"]  # acceleration
         units = "lbf"
         self.vis.plot(y_columns, x_columns, "Wheel Load", "Acceleration", "Wheel Load", units)
+

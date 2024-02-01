@@ -1,9 +1,10 @@
-from visualizer import Visualizer
+from Visualizer import Visualizer
 
 
 class make_plot:
+
     def __init__(self, data):
-        self.vis = Visualizer(data) 
+        self.vis = Visualizer(data)
 
     def plot_wheel_load_vs_time(self):
         y_columns = ["Force Front Left", "Force Front Right", "Force Rear Left", "Force Rear Right"]

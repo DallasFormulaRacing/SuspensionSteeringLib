@@ -1,5 +1,4 @@
 import pandas as pd
-from pandas import DataFrame
 import time
 from filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
@@ -43,20 +42,22 @@ class Conversions:
             self.data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
 
-    # fill out method for converting voltage to mm
-    def convert_voltage_to_mm(self):
-        pass
-
     def clean_data(self):
-        filter_instance = Filter()
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Left", 4, 30, 2)
+        filter = Filter()
+        self.data = filter.butter_lowpass_filter(
+            self.data, "Front Right", 4, 30, 2)
+        self.data = filter.butter_lowpass_filter(
+            self.data, "Front Left", 4, 30, 2)
+        self.data = filter.butter_lowpass_filter(
+            self.data, "Rear Right", 4, 30, 2)
+        self.data = filter.butter_lowpass_filter(
+            self.data, "Rear Left", 4, 30, 2)
 
-    def convert_to_gs(self) -> DataFrame:
-        # convert the voltage to gs
-        pass
+    def convert_xl_g(self):
+        for i, row in self.xl_data.iterrows():
+            self.xl_data.loc[i, "X"] = (row["X Axis"] - self.x_basis) * 0.53
+            self.xl_data.loc[i, "Y"] = (row["Y Axis"] - self.y_basis) * 0.53
+            self.xl_data.loc[i, "Z"] = (row["Z Axis"] - self.z_basis) * 0.53
 
     def convert_time(self, data):
         for i, row in data.iterrows():

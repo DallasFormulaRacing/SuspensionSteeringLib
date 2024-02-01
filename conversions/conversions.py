@@ -14,7 +14,10 @@ class Conversions:
     LINPOT_CONVERSION_CONSTANT = 15.0
     LINPOT_CONVERSION_OFFSET = 75.0
     MM_TO_IN_CONVERSION_FACTOR = 0.0393701
-    ACCEL_G_CONSTANT = 1.0
+    #ACCEL_G_CONSTANT = 1.0    This was not being used
+    ANALOG_ACCEL_CONVERSION_CONSTANT = 0.3
+    ANALOG_ACCEL_CONVERSION_OFFSET = 1.5
+    Gs_TO_METERS_PER_SEC_SQUARED_CONVERSION_FACTOR = 9.81
 
     def __init__(self, filename: str):
         self.filename = filename

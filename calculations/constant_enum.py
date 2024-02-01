@@ -16,3 +16,5 @@ class Constants(float, Enum):
     CORNER_WEIGHT_RF = 150.0
     CORNER_WEIGHT_RL = 150.0
     CORNER_WEIGHT_RR = 150.0
+
+    #This is where the cornering stiffness of the front and rear tires should be added once that becomes available

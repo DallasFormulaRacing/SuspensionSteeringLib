@@ -43,9 +43,13 @@ class Conversions:
             self.data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
 
-    # fill out method for converting voltage to mm
+    # reads row-wise first, then moves to the next row.
     def convert_voltage_to_mm(self):
-        pass
+        for i, row in self.data.iterrows():
+            self.data.loc[i, "Front Right"] = -(row["Front Right"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            self.data.loc[i, "Front Left"] = -(row["Front Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            self.data.loc[i, "Rear Right"] = -(row["Rear Right"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            self.data.loc[i, "Rear Left"] = -(row["Rear Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
 
     def clean_data(self):
         filter = Filter.Filter()

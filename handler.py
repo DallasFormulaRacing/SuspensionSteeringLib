@@ -40,3 +40,4 @@ class handler:
         displacement_df = calculations.calculate_displacement()
         time_constant = calculations.calculate_time_constant()
         velocity_df = calculations.calculate_velocities(displacement_df, time_constant)
+        damping_force_df = calculations.estimate_damping_force(velocity_df)

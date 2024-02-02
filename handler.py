@@ -11,6 +11,7 @@ class handler:
     plots = make_plot.make_plot()
     conversions.convert_voltage_to_in()
     conversions.convert_time(conversions.data)
+    conversions.convert_voltage_to_gs()
     conversions.clean_data()
     calculations.data = conversions.data
 

@@ -1,4 +1,4 @@
-from conversions import conversions
+from conversions.conversions import Conversions
 from calculations import calculations
 from plots import make_plot
 import plotly.express as px
@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 class handler:
-    conversions = conversions.Conversions("data\output2_linpot_2023-10-14_13-23-28.csv")
+    conversions = Conversions("data\output2_linpot_2023-10-14_13-23-28.csv", "data/output2_analog_2023-10-14_13-18-15.csv")
     calculations = calculations.Calculations()
     plots = make_plot.make_plot()
     conversions.convert_voltage_to_in()
@@ -33,3 +33,4 @@ class handler:
     calculations.calculate_force_rear_right()
 
     plots.plot_wheel_load_vs_time(calculations)
+    plots.plot_acceleration_vs_time()

@@ -5,11 +5,12 @@ import time
 from Filter.filter import Filter
 from conversions import conversion_factor_enum
 
-# Add dampening to factor into the wheel loads. Depends on the velocity 
+# Add dampening to factor into the wheel loads. Depends on the velocity
 # Dampening is proportional to velocity and it's a linear relationship
 
+
 class Conversions:
-    
+
     LINPOT_CONVERSION_CONSTANT = 15.0
     LINPOT_CONVERSION_OFFSET = 75.0
     MM_TO_IN_CONVERSION_FACTOR = 0.0393701
@@ -24,13 +25,13 @@ class Conversions:
         self.acc_data = pd.acc_dataFrame(pd.read_csv(filename_acc))
         self.switch_columns()
         print(self.data_linpot)
-        self.x_basis = self.acc_data.loc[0,"X"]
-        self.y_basis = self.acc_data.loc[0,"Y"]
-        self.z_basis = self.acc_data.loc[0,"Z"]
+        self.x_basis = self.acc_data.loc[0, "X"]
+        self.y_basis = self.acc_data.loc[0, "Y"]
+        self.z_basis = self.acc_data.loc[0, "Z"]
 
     def switch_columns(self):
         self.data_linpot = self.data_linpot.rename(
-            columns = {
+            columns={
                 "Front Right": "Front Left",
                 "Front Left": "Rear Left",
                 "Rear Left": "Front Right",
@@ -52,7 +53,7 @@ class Conversions:
         self.data_linpot = filter.butter_lowpass_filter(self.data_linpot, "Front Left", 4, 30, 2)
         self.data_linpot = filter.butter_lowpass_filter(self.data_linpot, "Rear Right", 4, 30, 2)
         self.data_linpot = filter.butter_lowpass_filter(self.data_linpot, "Rear Left", 4, 30, 2)
-    
+
     def convert_voltage_to_gs(self):
         for i, row in self.acc_data.iterrows():
             self.acc_data.loc[i, "X"] = (row["X"] - self.x_basis) * self.X_CONVERSION_CONSTANT_POS
@@ -66,5 +67,3 @@ class Conversions:
             data_linpot.loc[i, "Time"] = time.strftime(
                 "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step)
             )
-    
-

@@ -1,7 +1,7 @@
 import pandas as pd
 from pandas import DataFrame
 import time
-from Filter import Filter
+from Filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
 
 # Add dampening to factor into the wheel loads. Depends on the velocity
@@ -52,7 +52,7 @@ class Conversions:
             self.data.loc[i, "Rear Left"] = -(row["Rear Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
 
     def clean_data(self):
-        filter = Filter.Filter()
+        filter = Filter()
         self.data = filter.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
         self.data = filter.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
         self.data = filter.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)

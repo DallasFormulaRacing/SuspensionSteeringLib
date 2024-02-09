@@ -17,4 +17,4 @@ class Constants(float, Enum):
     CORNER_WEIGHT_RF = 150.0
     CORNER_WEIGHT_RL = 150.0
     CORNER_WEIGHT_RR = 150.0
-    DAMPING_COEFFICIENT = 0.0 # we need to get this value
+    DAMPING_COEFFICIENT = 170.0  # we need to get this value

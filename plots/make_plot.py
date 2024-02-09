@@ -1,4 +1,4 @@
-from visualizer import Visualizer
+from Visualizer import Visualizer
 
 
 class make_plot:
@@ -15,3 +15,10 @@ class make_plot:
         units = "lbf"
         vis = Visualizer(WL.data)
         vis.plot(y_columns, x_columns, "Wheel Load", "Acceleration", "Wheel Load", units)
+
+    def plot_damper_velocity_vs_time(self, Damper):
+        y_columns = ["Velocity Front Right", "Velocity Front Left", "Velocity Rear Right", "Velocity Rear Left"]
+        x_columns = ["Time"]
+        units = "mm/s"
+        vis = Visualizer(Damper.velocities_df)
+        vis.plot_line(y_columns, x_columns, "Velocity Vs Time",  "Velocity", "Time", units)

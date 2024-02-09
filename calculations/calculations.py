@@ -75,3 +75,50 @@ class Calculations:
      self.q = ((self.K_R + self.wheel_load_const_a) / (self.K_R - self.wheel_load_const_a)) - 1
      self.w = self.q
      return self.q
+
+    #Calculating lateral slip angle on each wheel
+    def calculate_slip_angle_front_left(self) -> float:
+        #If the column "Slip Angle Front Left" doesn't already exist in self.data, this function will create it
+
+        if "Force Front Left" in self.data:
+            self.data["Slip Angle Front Left"] = self.data["Force Front Left"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_FRONT_LEFT
+        else:
+            self.data["Slip Angle Front Left"] = self.calculate_force_front_left() * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_FRONT_LEFT
+
+        #calculate_force_front_left() creates the "Force Front Left" column if it doesn't exist already in self.data. I'm not sure if that will have already been called
+        #by the time this function gets called, so I've written a test to see if the column already exists
+
+        #The same code without the test is
+        #self.data["Slip Angle Front Left"] = self.data["Force Front Left"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_FRONT_LEFT
+        
+        return self.data["Slip Angle Front Left"]
+
+    def calculate_slip_angle_front_right(self) -> float:
+        if "Force Front Right" in self.data:
+            self.data["Slip Angle Front Right"] = self.data["Force Front Right"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_FRONT_RIGHT
+        else:
+            self.data["Slip Angle Front Right"] = self.calculate_force_front_right() * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_FRONT_RIGHT
+        
+        #The same code without the test is
+        #self.data["Slip Angle Front Right"] = self.data["Force Front Right"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_FRONT_RIGHT
+        return self.data["Slip Angle Front Right"]
+
+    def calculate_slip_angle_rear_left(self) -> float:
+        if "Force Rear Left" in self.data:
+            self.data["Slip Angle Rear Left"] = self.data["Force Rear Left"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_REAR_LEFT
+        else:
+            self.data["Slip Angle Rear Left"] = self.calculate_force_rear_left() * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_REAR_LEFT
+        
+        #The same code without the test is
+        #self.data["Slip Angle Rear Left"] = self.data["Force Rear Left"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_REAR_LEFT
+        return self.data["Slip Angle Rear Left"]
+
+    def calculate_slip_angle_rear_right(self) -> float:
+        if "Force Rear Right" in self.data:
+            self.data["Slip Angle Rear Right"] = self.data["Force Rear Right"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_REAR_RIGHT
+        else:
+            self.data["Slip Angle Rear Right"] = self.calculate_force_rear_right() * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_REAR_RIGHT      
+        
+        #The same code without the test is
+        #self.data["Slip Angle Rear Right"] = self.data["Force Rear Right"] * self.data["Y Acceleration"] / constants.CORNERING_STIFFNESS_REAR_RIGHT
+        return self.data["Slip Angle Rear Right"]

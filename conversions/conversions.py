@@ -59,14 +59,6 @@ class Conversions:
             self.xl_data.loc[i, "Y"] = (row["Y Axis"] - self.y_basis) * 0.53
             self.xl_data.loc[i, "Z"] = (row["Z Axis"] - self.z_basis) * 0.53
 
-    def convert_time(self, data):
-        for i, row in data.iterrows():
-            time_step = row["Time"]
-            mlsec = repr(time_step).split(".")[1][:3]
-            data.loc[i, "Time"] = time.strftime(
-                "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step)
-            )
-
     def convert_time(self, data_linpot):
         for i, row in data_linpot.iterrows():
             time_step = row["Time"]

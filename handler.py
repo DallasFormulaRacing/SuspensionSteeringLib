@@ -44,6 +44,8 @@ class handler:
         calculations.calculate_velocities(time_const)
         calculations.estimate_damping_force()
         plots.plot_damper_velocity_vs_time(calculations)
+        plots.plot_damper_force_vs_displacement(calculations)
+        plots.plot_damper_force_vs_velocity(calculations)
 
 def main():
     handler_instance = handler()

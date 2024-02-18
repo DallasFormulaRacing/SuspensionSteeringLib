@@ -40,8 +40,8 @@ class handler:
     def wheel_damper_handler(self):
         # call the convert to mm method from conversions
         calculations.calculate_displacement()
-        calculations.calculate_time_constant()
-        calculations.calculate_velocities()
+        time_const = calculations.calculate_time_constant()
+        calculations.calculate_velocities(time_const)
         calculations.estimate_damping_force()
         plots.plot_damper_velocity_vs_time(calculations)
 

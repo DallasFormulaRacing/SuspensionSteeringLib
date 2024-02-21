@@ -22,3 +22,5 @@ build/
 
 # System or hidden files
 .DS_Store
+.data
+.data/

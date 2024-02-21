@@ -51,6 +51,7 @@ class handler:
 
     def accel_handler(self):
         conversions.convert_acel_to_g()
+        conversions.convert_time(conversions.acel_data)
         plots = make_plot(conversions.acel_data)
         plots.plot_accel_vs_time()
 

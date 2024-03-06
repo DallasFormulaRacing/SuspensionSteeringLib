@@ -1,6 +1,4 @@
 from Visualizer import Visualizer
-import matplotlib.pyplot as plt
-
 
 class make_plot:
 

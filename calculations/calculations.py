@@ -4,6 +4,7 @@ from typing import Tuple, Any
 import numpy as np
 import pandas as pd
 from calculations.constant_enum_23 import Constants as constants
+from Filter.filter import Filter
 
 
 class Calculations:
@@ -136,15 +137,12 @@ class Calculations:
 
         return pitch, roll
 
-    def generate_pitch_roll_df(self) -> pd.DataFrame:
+    def generate_pitch_roll_df(self, low_pass_data) -> pd.DataFrame:
 
-        time = self.linpot_dataframe["Time"]
-
-        x = self.linpot_dataframe["X"]  # Accelerometer x values
-
-        y = self.linpot_dataframe["Y"]  # Accelerometer y values
-
-        z = self.linpot_dataframe["Z"]  # Accelerometer z values
+        time = low_pass_data["Time"]
+        x = low_pass_data["X_lowpass"]  # Accelerometer x values
+        y = low_pass_data["Y_lowpass"]  # Accelerometer y values
+        z = low_pass_data["Z_lowpass"]  # Accelerometer z values
 
         # Calculate pitch and roll angles
         pitch = []

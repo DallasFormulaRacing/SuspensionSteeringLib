@@ -4,7 +4,6 @@ from typing import Tuple, Any
 import numpy as np
 import pandas as pd
 from calculations.constant_enum_23 import Constants as constants
-from Filter.filter import Filter
 
 
 class Calculations:

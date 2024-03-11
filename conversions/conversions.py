@@ -34,27 +34,36 @@ class Conversions:
         )
 
     # converts voltage to mm and then inches for as spring rates are in inches / pound
-    def convert_voltage_to_in(self):
-        for i, row in self.linpot_data.iterrows():
-            self.linpot_data.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                      constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            self.linpot_data.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                     constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            self.linpot_data.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                     constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            self.linpot_data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                    constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+    def convert_voltage_to_in(self) -> pd.DataFrame:
 
-    def convert_voltage_to_mm(self):
+        displacement_to_inches = self.linpot_data.copy()
+
         for i, row in self.linpot_data.iterrows():
-            self.linpot_data.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+            displacement_to_inches.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                            constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            displacement_to_inches.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                           constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            displacement_to_inches.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                           constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            displacement_to_inches.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                          constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+
+        return displacement_to_inches
+
+    def convert_voltage_to_mm(self) -> pd.DataFrame:
+
+        displacement_to_mm = self.linpot_data.copy()
+
+        for i, row in self.linpot_data.iterrows():
+            displacement_to_mm.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                        constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            displacement_to_mm.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            displacement_to_mm.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            displacement_to_mm.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
                                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            self.linpot_data.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                     constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            self.linpot_data.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                     constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            self.linpot_data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                    constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+        return displacement_to_mm
 
     def clean_linpot_data(self):
         filter = Filter()
@@ -75,13 +84,19 @@ class Conversions:
             self.acel_data, "Y", 4, 30, 2)
         self.acel_data = filter.butter_lowpass_filter(
             self.acel_data, "Z", 4, 30, 2)
+
         return self.acel_data
 
-    def convert_acel_to_g(self):
+    def convert_acel_to_g(self) -> pd.DataFrame:
+
+        voltage_to_g = self.acel_data.copy()
+
         for i, row in self.acel_data.iterrows():
-            self.acel_data.loc[i, "X"] = (row["X"]) * 0.53
-            self.acel_data.loc[i, "Y"] = (row["Y"]) * 0.53
-            self.acel_data.loc[i, "Z"] = (row["Z"]) * 0.53
+            voltage_to_g.loc[i, "X"] = (row["X"]) * 0.53
+            voltage_to_g.loc[i, "Y"] = (row["Y"]) * 0.53
+            voltage_to_g.loc[i, "Z"] = (row["Z"]) * 0.53
+
+        return voltage_to_g
 
     def convert_time(self, linpot_data):
         for i, row in linpot_data.iterrows():

@@ -45,14 +45,14 @@ class Client:
 
     def linpot_conversion_client(self):
         conversions.clean_linpot_data()
-        conversions.convert_voltage_to_mm()
-        plots = make_plot(conversions.linpot_data)
+        converted_data = conversions.convert_voltage_to_mm()
+        plots = make_plot(converted_data)
         plots.plot_linpot_vs_time()
 
     def accel_conversion_client(self):
         conversions.convert_acel_to_g()
-        conversions.convert_time(conversions.acel_data)
-        plots = make_plot(conversions.acel_data)
+        converted_data = conversions.convert_time(conversions.acel_data)
+        plots = make_plot(converted_data)
         plots.plot_accel_vs_time()
 
     def pitch_roll_handler(self):
@@ -63,12 +63,16 @@ class Client:
 
 
 def main():
-    handler_instance = Client()
+    client = Client()
+
+    conversions.clean_acel_data()
+    conversions.clean_linpot_data()
+
     try:
-        # handler_instance.wheel_load_handler()
-        # handler_instance.linpot_handler()
-        # handler_instance.accel_handler()
-        handler_instance.pitch_roll_handler()
+        client.wheel_load_client()
+        client.linpot_conversion_client()
+        client.accel_conversion_client
+        client.pitch_roll_handler()
     except Exception:
         traceback.print_exc()
 

@@ -1,6 +1,5 @@
 from Visualizer import Visualizer
 
-
 class make_plot:
 
     def __init__(self, data):
@@ -29,3 +28,9 @@ class make_plot:
         x_columns = ["Time"]
         units = "g"
         self.vis.plot_line(y_columns, x_columns, "Acceleration", "Time", "Acceleration", units)
+
+    def plot_pitch_roll_vs_time(self):
+        y_columns = ["Pitch", "Roll"]
+        x_columns = ["Time"]
+        units = "degrees"
+        self.vis.plot_line(y_columns, x_columns, "Pitch and Roll Angle", "Time", "Pitch and Roll", units)

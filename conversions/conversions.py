@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-from filter.filter import Filter
+from Filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
 
 # Add dampening to factor into the wheel loads. Depends on the velocity
@@ -65,6 +65,17 @@ class Conversions:
             self.linpot_data, "Rear Right", 4, 30, 2)
         self.linpot_data = filter.butter_lowpass_filter(
             self.linpot_data, "Rear Left", 4, 30, 2)
+
+    def clean_acel_data(self):
+        filter = Filter()
+        self.acel_data = filter.butter_lowpass_filter(
+            self.acel_data, "X", 4, 30, 2)
+        self.acel_data = filter.butter_lowpass_filter(
+            self.acel_data, "Y", 4, 30, 2)
+        self.acel_data = filter.butter_lowpass_filter(
+            self.acel_data, "Z", 4, 30, 2)
+        return self.acel_data
+
 
     def convert_acel_to_g(self):
         for i, row in self.acel_data.iterrows():

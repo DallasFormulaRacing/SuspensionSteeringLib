@@ -3,7 +3,7 @@ from typing import Tuple, Any
 
 import numpy as np
 import pandas as pd
-from calculations.constant_enum_23 import Constants as constants
+from calculations.constants import Constants_23 as constants
 
 
 class Calculations:

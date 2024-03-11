@@ -7,9 +7,9 @@ conversions = Conversions("data/output2_linpot_2023-10-14_13-23-28.csv", "data/o
 calculations = Calculations("data/output2_linpot_2023-10-14_13-23-28.csv")
 
 
-class handler:
+class Client:
 
-    def wheel_load_handler(self):
+    def wheel_load_client(self):
         # loads and prepares initial data
         conversions.convert_voltage_to_in()
         conversions.convert_time(conversions.linpot_data)
@@ -36,20 +36,20 @@ class handler:
         # plots.plot_wheel_load_vs_acceleration()
         plots.plot_wheel_load_vs_time()
 
-    def wheel_damper_handler(self):
+    def wheel_damper_client(self):
         # call the convert to mm method from conversions
         displacement_df = calculations.calculate_displacement()
         time_constant = calculations.calculate_time_constant()
         velocity_df = calculations.calculate_velocities(displacement_df, time_constant)
         print(velocity_df)
 
-    def linpot_handler(self):
+    def linpot_conversion_client(self):
         conversions.clean_linpot_data()
         conversions.convert_voltage_to_mm()
         plots = make_plot(conversions.linpot_data)
         plots.plot_linpot_vs_time()
 
-    def accel_handler(self):
+    def accel_conversion_client(self):
         conversions.convert_acel_to_g()
         conversions.convert_time(conversions.acel_data)
         plots = make_plot(conversions.acel_data)
@@ -57,7 +57,7 @@ class handler:
 
 
 def main():
-    handler_instance = handler()
+    handler_instance = Client()
     try:
         handler_instance.wheel_load_handler()
         handler_instance.linpot_handler()

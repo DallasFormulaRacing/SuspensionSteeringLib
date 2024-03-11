@@ -57,16 +57,17 @@ class Client:
 
     def pitch_roll_handler(self):
         x_y_z_low_pass_data = conversions.clean_acel_data()
-        pitch_roll = calculations.generate_pitch_roll_df(x_y_z_low_pass_data)
+        pitch_roll = conversions.generate_pitch_roll_df(x_y_z_low_pass_data)
         plots = make_plot(pitch_roll)
         plots.plot_pitch_roll_vs_time()
+
 
 def main():
     handler_instance = Client()
     try:
-        handler_instance.wheel_load_handler()
-        handler_instance.linpot_handler()
-        handler_instance.accel_handler()
+        # handler_instance.wheel_load_handler()
+        # handler_instance.linpot_handler()
+        # handler_instance.accel_handler()
         handler_instance.pitch_roll_handler()
     except Exception:
         traceback.print_exc()

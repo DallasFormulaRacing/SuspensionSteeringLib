@@ -125,7 +125,8 @@ class Calculations:
         self.w = self.q
         return self.q
 
-    def calculate_pitch_roll_angles(self, x, y, z) -> tuple[float, float]:
+    @staticmethod
+    def calculate_pitch_roll_angles(x, y, z) -> tuple[float, float]:
         # Calculate roll
         roll = np.arctan2(y, z) * 180 / np.pi
 
@@ -135,25 +136,3 @@ class Calculations:
         # Yaw is not directly calculable from accelerometer data
 
         return pitch, roll
-
-    def generate_pitch_roll_df(self, low_pass_data) -> pd.DataFrame:
-
-        time = low_pass_data["Time"]
-        x = low_pass_data["X_lowpass"]  # Accelerometer x values
-        y = low_pass_data["Y_lowpass"]  # Accelerometer y values
-        z = low_pass_data["Z_lowpass"]  # Accelerometer z values
-
-        # Calculate pitch and roll angles
-        pitch = []
-        roll = []
-        for i in range(len(x)):
-            p, r = self.calculate_pitch_roll_angles(x[i], y[i], z[i])
-            pitch.append(p)
-            roll.append(r)
-
-        pitch_roll_df = pd.DataFrame({
-            'Time': time,
-            'Pitch': pitch,
-            'Roll': roll
-        })
-        return pitch_roll_df

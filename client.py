@@ -33,7 +33,6 @@ class Client:
         calculations.calculate_force_rear_right()
 
         plots = make_plot(calculations.data)
-        # plots.plot_wheel_load_vs_acceleration()
         plots.plot_wheel_load_vs_time()
 
     def wheel_damper_client(self):
@@ -44,14 +43,13 @@ class Client:
         print(velocity_df)
 
     def linpot_conversion_client(self):
-        conversions.clean_linpot_data()
         converted_data = conversions.convert_voltage_to_mm()
         plots = make_plot(converted_data)
         plots.plot_linpot_vs_time()
 
     def accel_conversion_client(self):
-        conversions.convert_acel_to_g()
-        converted_data = conversions.convert_time(conversions.acel_data)
+        accel_g = conversions.convert_acel_to_g()
+        converted_data = conversions.convert_time(accel_g)
         plots = make_plot(converted_data)
         plots.plot_accel_vs_time()
 

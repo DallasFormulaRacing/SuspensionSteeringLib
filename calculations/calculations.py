@@ -1,5 +1,3 @@
-import os
-from typing import Tuple, Any
 
 import numpy as np
 import pandas as pd
@@ -12,31 +10,52 @@ class Calculations:
         self.linpot_dataframe = pd.DataFrame(pd.read_csv(filename))
 
     def calculate_displacement(self) -> pd.DataFrame:
-        self.linpot_dataframe['Displacement Front Right'] = self.linpot_dataframe['Front Right'].diff(
+
+        displacement_df = self.linpot_dataframe.copy()
+
+        displacement_df['Displacement Front Right'] = self.linpot_dataframe['Front Right'].diff(
         ).fillna(0)
-        self.linpot_dataframe['Displacement Front Left'] = self.linpot_dataframe['Front Left'].diff(
+        displacement_df['Displacement Front Left'] = self.linpot_dataframe['Front Left'].diff(
         ).fillna(0)
-        self.linpot_dataframe['Displacement Rear Right'] = self.linpot_dataframe['Rear Right'].diff(
+        displacement_df['Displacement Rear Right'] = self.linpot_dataframe['Rear Right'].diff(
         ).fillna(0)
-        self.linpot_dataframe['Displacement Rear Left'] = self.linpot_dataframe['Rear Left'].diff(
+        displacement_df['Displacement Rear Left'] = self.linpot_dataframe['Rear Left'].diff(
         ).fillna(0)
 
-        # self.linpot_dataframe.to_csv('fake_csv.csv')
+        return displacement_df
+
+    def calculate_time_constant(self) -> float:
+        time_const = self.linpot_dataframe.loc[0, "Time"] - self.linpot_dataframe.loc[1, "Time"]
+        return time_const
+
+    def calculate_velocities(self, time_const: float) -> pd.DataFrame:
+
+        velocities_df = self.linpot_dataframe.copy()
+
+        for i, row in self.linpot_dataframe.iterrows():
+            velocities_df.loc[i, 'Velocity Front Right'] = self.calculate_velocity(
+                row['Displacement Front Right'], time_const)
+            velocities_df.loc[i, 'Velocity Front Left'] = self.calculate_velocity(
+                row['Displacement Front Left'], time_const)
+            velocities_df.loc[i, 'Velocity Rear Right'] = self.calculate_velocity(
+                row['Displacement Rear Right'], time_const)
+            velocities_df.loc[i, 'Velocity Rear Left'] = self.calculate_velocity(
+                row['Displacement Rear Left'], time_const)
+
+        return velocities_df
+
+    def calculate_velocity(self, displacement: float, time_const: float) -> float:
+        return displacement / time_const
+
+    def estimate_damping_force(self) -> pd.DataFrame:
+
+        for i, row in self.linpot_dataframe.iterrows():
+            self.linpot_dataframe.loc[i, 'Damping Force Front Right'] = -(row["Velocity Front Right"] * constants.DAMPING_COEFFICIENT)
+            self.linpot_dataframe.loc[i, 'Damping Force Front Left'] = -(row["Velocity Front Left"] * constants.DAMPING_COEFFICIENT)
+            self.linpot_dataframe.loc[i, 'Damping Force Rear Right'] = -(row["Velocity Rear Right"] * constants.DAMPING_COEFFICIENT)
+            self.linpot_dataframe.loc[i, 'Damping Force Rear Left'] = -(row["Velocity Rear Left"] * constants.DAMPING_COEFFICIENT)
 
         return self.linpot_dataframe
-
-    # move over time method
-    def calculate_time_constant(self) -> float:
-        pass
-
-    def calculate_velocities(self, displacements: pd.DataFrame, time_const: float) -> pd.DataFrame:
-        # apply to each column you need to convert
-        for i, row in self.linpot_dataframe.itterows():
-            pass
-
-    # put in math for finding velocity, return velocity
-    def calculate_velocity(self) -> float:
-        pass
 
     def calculate_forces_part_1(self) -> float:
         return self.K_H * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] +

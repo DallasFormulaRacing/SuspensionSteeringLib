@@ -6,6 +6,10 @@ import traceback
 conversions = Conversions("data/output2_linpot_2023-10-14_13-23-28.csv", "data/output2_analog_2023-10-14_13-18-15.csv")
 calculations = Calculations("data/output2_linpot_2023-10-14_13-23-28.csv")
 
+# TODO Wheel damper convert to return fig
+# TODO Wheel load convert to return fig
+# TODO fix the filters
+
 
 class Client:
 
@@ -13,7 +17,6 @@ class Client:
         # loads and prepares initial data
         conversions.convert_voltage_to_in()
         conversions.convert_time(conversions.linpot_data)
-        conversions.clean_linpot_data()
         calculations.data = conversions.linpot_data
 
         # calculating constants
@@ -33,7 +36,8 @@ class Client:
         calculations.calculate_force_rear_right()
 
         plots = make_plot(calculations.data)
-        plots.plot_wheel_load_vs_time()
+        fig = plots.plot_wheel_load_vs_time()
+        fig.show()
 
     def wheel_damper_client(self):
         displacement_df = calculations.calculate_displacement()
@@ -41,35 +45,38 @@ class Client:
         velocity_df = calculations.calculate_velocities(displacement_df, time_constant)
         print(velocity_df)
 
-    def linpot_conversion_client(self):
+    def linpot_vs_time_client(self):
         converted_data = conversions.convert_voltage_to_mm()
         plots = make_plot(converted_data)
-        plots.plot_linpot_vs_time()
+        fig = plots.plot_linpot_vs_time()
+        fig.show()
 
-    def accel_conversion_client(self):
+    def accel_vs_time_client(self):
         accel_g = conversions.convert_acel_to_g()
-        converted_data = conversions.convert_time(accel_g)
-        plots = make_plot(converted_data)
-        plots.plot_accel_vs_time()
+        print(accel_g)
+        plots = make_plot(accel_g)
+        fig = plots.plot_accel_vs_time()
+        fig.show()
 
-    def pitch_roll_handler(self):
+    def pitch_roll_client(self):
         x_y_z_low_pass_data = conversions.clean_acel_data()
         pitch_roll = conversions.generate_pitch_roll_df(x_y_z_low_pass_data)
         plots = make_plot(pitch_roll)
-        plots.plot_pitch_roll_vs_time()
+        fig = plots.plot_pitch_roll_vs_time()
+        fig.show()
 
 
 def main():
     client = Client()
 
-    conversions.clean_acel_data()
-    conversions.clean_linpot_data()
+    # conversions.clean_acel_data()
+    # conversions.clean_linpot_data()
 
     try:
-        client.wheel_load_client()
-        client.linpot_conversion_client()
-        client.accel_conversion_client
-        client.pitch_roll_handler()
+        # client.wheel_load_client()
+        # client.linpot_vs_time_client()
+        # client.accel_vs_time_client()
+        client.pitch_roll_client()
     except Exception:
         traceback.print_exc()
 

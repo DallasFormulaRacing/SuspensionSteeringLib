@@ -49,13 +49,15 @@ class Calculations:
 
     def estimate_damping_force(self) -> pd.DataFrame:
 
-        for i, row in self.linpot_dataframe.iterrows():
-            self.linpot_dataframe.loc[i, 'Damping Force Front Right'] = -(row["Velocity Front Right"] * constants.DAMPING_COEFFICIENT)
-            self.linpot_dataframe.loc[i, 'Damping Force Front Left'] = -(row["Velocity Front Left"] * constants.DAMPING_COEFFICIENT)
-            self.linpot_dataframe.loc[i, 'Damping Force Rear Right'] = -(row["Velocity Rear Right"] * constants.DAMPING_COEFFICIENT)
-            self.linpot_dataframe.loc[i, 'Damping Force Rear Left'] = -(row["Velocity Rear Left"] * constants.DAMPING_COEFFICIENT)
+        dampening_df = self.linpot_dataframe.copy()
 
-        return self.linpot_dataframe
+        for i, row in self.linpot_dataframe.iterrows():
+            dampening_df.loc[i, 'Damping Force Front Right'] = -(row["Velocity Front Right"] * constants.DAMPING_COEFFICIENT)
+            dampening_df.loc[i, 'Damping Force Front Left'] = -(row["Velocity Front Left"] * constants.DAMPING_COEFFICIENT)
+            dampening_df.loc[i, 'Damping Force Rear Right'] = -(row["Velocity Rear Right"] * constants.DAMPING_COEFFICIENT)
+            dampening_df.loc[i, 'Damping Force Rear Left'] = -(row["Velocity Rear Left"] * constants.DAMPING_COEFFICIENT)
+
+        return dampening_df
 
     def calculate_forces_part_1(self) -> float:
         return self.K_H * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] +

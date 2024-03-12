@@ -15,14 +15,12 @@ class Conversions:
     MM_TO_IN_CONVERSION_FACTOR = 0.0393701
     ACCEL_G_CONSTANT = 1.0
 
-    def __init__(self, filename: str, acel_filename: str):
-        self.linpot_filename = filename
+    def __init__(self, linpot_filename: str, acel_filename: str):
+        self.linpot_filename = linpot_filename
         self.acel_filename = acel_filename
-        self.linpot_data = pd.read_csv(filename)
+        self.linpot_data = pd.read_csv(linpot_filename)
         self.acel_data = pd.read_csv(acel_filename)
         self.switch_columns()
-
-        print(self.linpot_data)
 
     def switch_columns(self):
         self.linpot_data = self.linpot_data.rename(
@@ -38,7 +36,7 @@ class Conversions:
 
         displacement_to_inches = self.linpot_data.copy()
 
-        for i, row in self.linpot_data.iterrows():
+        for i, row in displacement_to_inches.iterrows():
             displacement_to_inches.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
                                                             constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
             displacement_to_inches.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
@@ -54,15 +52,13 @@ class Conversions:
 
         displacement_to_mm = self.linpot_data.copy()
 
-        for i, row in self.linpot_data.iterrows():
-            displacement_to_mm.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                        constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            displacement_to_mm.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            displacement_to_mm.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
-            displacement_to_mm.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                      constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+        for i, row in displacement_to_mm.iterrows():
+            displacement_to_mm.loc[i, "Front Right"] = (
+                row["Front Right"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            displacement_to_mm.loc[i, "Front Left"] = -(row["Front Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            displacement_to_mm.loc[i, "Rear Right"] = -(row["Rear Right"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            displacement_to_mm.loc[i, "Rear Left"] = -(row["Rear Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+
         return displacement_to_mm
 
     def clean_linpot_data(self):

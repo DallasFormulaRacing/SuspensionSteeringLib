@@ -1,6 +1,7 @@
 import pandas as pd
 from scipy.signal import butter, filtfilt
 
+
 class Filter:
 
     def butter_lowpass_filter(self, data: pd.DataFrame, column: str, cutoff: float, fs: float, order: int) -> pd.DataFrame:

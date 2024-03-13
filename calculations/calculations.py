@@ -7,19 +7,14 @@ class Calculations:
     def __init__(self, filename: str):
         self.linpot_dataframe = pd.DataFrame(pd.read_csv(filename))
 
-    def calculate_displacement(self) -> pd.DataFrame:
-        self.linpot_dataframe['Displacement Front Right'] = self.linpot_dataframe['Front Right'].diff(
-        ).fillna(0)
-        self.linpot_dataframe['Displacement Front Left'] = self.linpot_dataframe['Front Left'].diff(
-        ).fillna(0)
-        self.linpot_dataframe['Displacement Rear Right'] = self.linpot_dataframe['Rear Right'].diff(
-        ).fillna(0)
-        self.linpot_dataframe['Displacement Rear Left'] = self.linpot_dataframe['Rear Left'].diff(
-        ).fillna(0)
-
+    # argument should be dataframe, not just self
+    def calculate_displacement(df: pd.DataFrame) -> pd.DataFrame:
+        df['Displacement Front Right'] = df['Front Right'].diff().fillna(0)
+        df['Displacement Front Left'] = df['Front Left'].diff().fillna(0)
+        df['Displacement Rear Right'] = df['Rear Right'].diff().fillna(0)
+        df['Displacement Rear Left'] = df['Rear Left'].diff().fillna(0)
         # self.linpot_dataframe.to_csv('fake_csv.csv')
-
-        return self.linpot_dataframe
+        return df
 
     def calculate_time_constant(self) -> float:
         time_const = self.linpot_dataframe.loc[0, "Time"] - self.linpot_dataframe.loc[1, "Time"]

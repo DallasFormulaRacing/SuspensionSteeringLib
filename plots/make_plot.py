@@ -35,20 +35,19 @@ class make_plot:
         fig = px.line(self.data, x="Time", y=["Pitch", "Roll"], title='Pitch and Roll vs Time')
         return fig
 
-    def plot_damper_velocity_vs_time(self, Damper):
-        y_columns = ["Velocity Front Right", "Velocity Front Left", "Velocity Rear Right", "Velocity Rear Left"]
-        x_columns = ["Time"]
-        units = "mm/s"
-        vis = Visualizer(Damper.data)
-        vis.plot_line(y_columns, x_columns, "Velocity Vs Time",  "Velocity", "Time", units)
+    def plot_wheel_velocity_vs_time(self):
+        fig = px.line(self.data, x="Time", y=["Velocity Front Right", "Velocity Front Left",
+                      "Velocity Rear Right", "Velocity Rear Left"], title='Wheel Velocity vs Time')
+        return fig
 
-    def plot_damper_force_vs_velocity(self, Damper):
-        y_columns = ["Damping Force Front Right", "Damping Force Front Left", "Damping Force Rear Right", "Damping Force Rear Left"]
-        x_columns = ["Velocity Front Right", "Velocity Front Left", "Velocity Rear Right", "Velocity Rear Left"]
-        units = "mm/s"
-        vis = Visualizer(Damper.data)
-        vis.plot_line(y_columns, x_columns, "Force Vs Velocity",  "Force", "Velocity", units)
+    def plot_damper_force_vs_velocity(self):
 
+        fig = px.line(self.data, x="Time",
+                      y=["Damping Force Front Right", "Damping Force Front Left", "Damping Force Rear Right", "Damping Force Rear Left"],
+                      title='Damper Force vs Velocity')
+        return fig
+
+    # TODO do we need this method ?
     def plot_damper_force_vs_displacement(self, Damper):
         y_columns = ["Damping Force Front Right", "Damping Force Front Left", "Damping Force Rear Right", "Damping Force Rear Left"]
         x_columns = ["Displacement Front Right", "Displacement Front Left", "Displacement Rear Right", "Displacement Rear Left"]

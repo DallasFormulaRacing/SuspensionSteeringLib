@@ -28,30 +28,33 @@ class Calculations:
         time_const = self.linpot_dataframe.loc[0, "Time"] - self.linpot_dataframe.loc[1, "Time"]
         return time_const
 
-    def calculate_velocities(self, time_const: float) -> pd.DataFrame:
+    def calculate_velocities(self) -> pd.DataFrame:
 
-        velocities_df = self.linpot_dataframe.copy()
+        displacement_df = self.calculate_displacement()
 
-        for i, row in self.linpot_dataframe.iterrows():
-            velocities_df.loc[i, 'Velocity Front Right'] = self.calculate_velocity(
-                row['Displacement Front Right'], time_const)
-            velocities_df.loc[i, 'Velocity Front Left'] = self.calculate_velocity(
-                row['Displacement Front Left'], time_const)
-            velocities_df.loc[i, 'Velocity Rear Right'] = self.calculate_velocity(
-                row['Displacement Rear Right'], time_const)
-            velocities_df.loc[i, 'Velocity Rear Left'] = self.calculate_velocity(
-                row['Displacement Rear Left'], time_const)
+        print(displacement_df)
 
-        return velocities_df
+        for i, row in displacement_df.iterrows():
+            displacement_df.loc[i, 'Velocity Front Right'] = self.calculate_velocity(
+                row['Displacement Front Right'])
+            displacement_df.loc[i, 'Velocity Front Left'] = self.calculate_velocity(
+                row['Displacement Front Left'])
+            displacement_df.loc[i, 'Velocity Rear Right'] = self.calculate_velocity(
+                row['Displacement Rear Right'])
+            displacement_df.loc[i, 'Velocity Rear Left'] = self.calculate_velocity(
+                row['Displacement Rear Left'])
 
-    def calculate_velocity(self, displacement: float, time_const: float) -> float:
+        return displacement_df
+
+    def calculate_velocity(self, displacement: float) -> float:
+        time_const = self.calculate_time_constant()
         return displacement / time_const
 
     def estimate_damping_force(self) -> pd.DataFrame:
 
-        dampening_df = self.linpot_dataframe.copy()
+        dampening_df = self.calculate_velocities()
 
-        for i, row in self.linpot_dataframe.iterrows():
+        for i, row in dampening_df.iterrows():
             dampening_df.loc[i, 'Damping Force Front Right'] = -(row["Velocity Front Right"] * constants.DAMPING_COEFFICIENT)
             dampening_df.loc[i, 'Damping Force Front Left'] = -(row["Velocity Front Left"] * constants.DAMPING_COEFFICIENT)
             dampening_df.loc[i, 'Damping Force Rear Right'] = -(row["Velocity Rear Right"] * constants.DAMPING_COEFFICIENT)

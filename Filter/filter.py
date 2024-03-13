@@ -8,6 +8,7 @@ class Filter:
         nyq = 0.5 * fs
         normal_cutoff = cutoff / nyq
         b, a = butter(order, normal_cutoff, btype="low", analog=False)
+
         data[f"{column}_lowpass"] = filtfilt(b, a, data[column])
 
         return data

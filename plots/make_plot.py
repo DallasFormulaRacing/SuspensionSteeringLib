@@ -1,4 +1,4 @@
-from Visualizer import Visualizer
+from deprecated.Visualizer import Visualizer
 import plotly.express as px
 
 

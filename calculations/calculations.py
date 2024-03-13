@@ -20,20 +20,20 @@ class Calculations:
         time_const = self.linpot_dataframe.loc[0, "Time"] - self.linpot_dataframe.loc[1, "Time"]
         return time_const
 
-    def calculate_velocities(self, time_const: float) -> pd.DataFrame:
-
+    def calculate_velocities(df: pd.DataFrame, time_const: float) -> pd.DataFrame:
+        result_df = df.copy()  # copied to be safe
         # apply to each column you need to convert
-        for i, row in self.linpot_dataframe.iterrows():
-            self.linpot_dataframe.loc[i, 'Velocity Front Right'] = self.calculate_velocity(
+        for i, row in result_df.iterrows():
+            result_df.loc[i, 'Velocity Front Right'] = Calculations.calculate_velocity(
                 row['Displacement Front Right'], time_const)
-            self.linpot_dataframe.loc[i, 'Velocity Front Left'] = self.calculate_velocity(
+            result_df.loc[i, 'Velocity Front Left'] = Calculations.calculate_velocity(
                 row['Displacement Front Left'], time_const)
-            self.linpot_dataframe.loc[i, 'Velocity Rear Right'] = self.calculate_velocity(
+            result_df.loc[i, 'Velocity Rear Right'] = Calculations.calculate_velocity(
                 row['Displacement Rear Right'], time_const)
-            self.linpot_dataframe.loc[i, 'Velocity Rear Left'] = self.calculate_velocity(
+            result_df.loc[i, 'Velocity Rear Left'] = Calculations.calculate_velocity(
                 row['Displacement Rear Left'], time_const)
         # returns dataframe with 4 columns of velocities
-        return self.linpot_dataframe
+        return result_df
     
     # put in math for finding velocity, return velocity
     # velocity = displacement / time
@@ -41,16 +41,16 @@ class Calculations:
         return displacement / time_const
 
     # this is the force that will be on the damper
-    # WHat is the DAMPING_COEFFICIENT?
-    def estimate_damping_force(self) -> pd.DataFrame:
+    def estimate_damping_force(df: pd.DataFrame) -> pd.DataFrame:
+        result_df = df.copy()
         # apply to each column you need to convert
-        for i, row in self.linpot_dataframe.iterrows():
-            self.linpot_dataframe.loc[i, 'Damping Force Front Right'] = -(row["Velocity Front Right"] * constants.DAMPING_COEFFICIENT)
-            self.linpot_dataframe.loc[i, 'Damping Force Front Left'] = -(row["Velocity Front Left"] * constants.DAMPING_COEFFICIENT)
-            self.linpot_dataframe.loc[i, 'Damping Force Rear Right'] = -(row["Velocity Rear Right"] * constants.DAMPING_COEFFICIENT)
-            self.linpot_dataframe.loc[i, 'Damping Force Rear Left'] = -(row["Velocity Rear Left"] * constants.DAMPING_COEFFICIENT)
+        for i, row in result_df.iterrows():
+            result_df.loc[i, 'Damping Force Front Right'] = -(row["Velocity Front Right"] * constants.DAMPING_COEFFICIENT)
+            result_df.loc[i, 'Damping Force Front Left'] = -(row["Velocity Front Left"] * constants.DAMPING_COEFFICIENT)
+            result_df.loc[i, 'Damping Force Rear Right'] = -(row["Velocity Rear Right"] * constants.DAMPING_COEFFICIENT)
+            result_df.loc[i, 'Damping Force Rear Left'] = -(row["Velocity Rear Left"] * constants.DAMPING_COEFFICIENT)
         # returns dataframe with 4 columns of damping forces
-        return self.linpot_dataframe
+        return result_df
     
     def calculate_forces_part_1(self) -> float:
         return self.K_H * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] +

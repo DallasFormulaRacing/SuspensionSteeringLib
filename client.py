@@ -6,8 +6,6 @@ import traceback
 conversions = Conversions("data/output2_linpot_2023-10-14_13-23-28.csv", "data/output2_analog_2023-10-14_13-18-15.csv")
 calculations = Calculations("data/output2_linpot_2023-10-14_13-23-28.csv")
 
-# TODO Wheel damper convert to return fig
-# TODO Wheel load convert to return fig
 # TODO fix the filters
 
 
@@ -24,7 +22,7 @@ class Client:
     def damper_velocity_vs_time_client(self):
         velocity_df = calculations.calculate_velocities()
         plots = make_plot(velocity_df)
-        fig = plots.plot_wheel_velocity_vs_time(velocity_df)
+        fig = plots.plot_wheel_velocity_vs_time()
         fig.show()
 
     def damper_force_vs_time_client(self):
@@ -61,12 +59,12 @@ def main():
     # conversions.clean_linpot_data()
 
     try:
-        # client.damper_velocity_vs_time_client()
+        client.damper_velocity_vs_time_client()
         client.damper_force_vs_time_client()
-        # client.wheel_load_client()
-        # client.linpot_vs_time_client()
-        # client.accel_vs_time_client()
-        # client.pitch_roll_client()
+        client.wheel_load_client()
+        client.linpot_vs_time_client()
+        client.accel_vs_time_client()
+        client.pitch_roll_client()
     except Exception:
         traceback.print_exc()
 

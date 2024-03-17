@@ -1,5 +1,4 @@
 import pandas as pd
-from pandas import DataFrame
 import time
 from filter.filter import Filter
 from conversions.conversion_factor_enum import Constants as constants
@@ -15,14 +14,30 @@ class Conversions:
     MM_TO_IN_CONVERSION_FACTOR = 0.0393701
     ACCEL_G_CONSTANT = 1.0
 
-    def __init__(self, filename: str):
+    def __init__(self, filename: str, filename2: str):
         self.filename = filename
+        self.filename2 = filename2
         self.data = pd.DataFrame(pd.read_csv(filename))
-        self.switch_columns()
+        self.data2 = pd.DataFrame(pd.read_csv(filename2))
+
+        self.data = self.switch_columns(self.data)
 
         print(self.data)
+        print(self.data2.info())
 
-    def switch_columns(self):
+    def switch_columns(self, df):
+        df = df.rename(
+            columns={
+                "Front Right": "Front Left",
+                "Front Left": "Rear Left",
+                "Rear Left": "Front Right",
+            }
+        )
+        return df
+
+    # todo return modifed dataframe that is passed in as an argument
+    # todo change to new linpot orientation
+    def switch_columns2(self):
         self.data = self.data.rename(
             columns={
                 "Front Right": "Front Left",
@@ -31,37 +46,55 @@ class Conversions:
             }
         )
 
-    # converts voltage to mm and then inches for as spring rates are in inches / pound
-    def convert_voltage_to_in(self):
+    # converts voltage to mm
+    # todo return modifed dataframe that is passed in as an argument
+    def convert_voltage_to_mm(self):
         for i, row in self.data.iterrows():
             self.data.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                               constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+                                               constants.LINPOT_CONVERSION_OFFSET)
             self.data.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+                                              constants.LINPOT_CONVERSION_OFFSET) 
             self.data.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                              constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+                                              constants.LINPOT_CONVERSION_OFFSET) 
             self.data.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                             constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+                                             constants.LINPOT_CONVERSION_OFFSET)
+        return self.data
 
-    # fill out method for converting voltage to mm
-    def convert_voltage_to_mm(self):
-        pass
+    # converts voltage to mm and then inches for as spring rates are in inches / pound
+    def convert_voltage_to_in(self, df: pd.DataFrame) -> pd.DataFrame:
+        for i, row in df.iterrows():
+            df.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                        constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            df.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            df.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+            df.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
+                                      constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
+        return df
 
-    def clean_data(self):
+    def clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
         filter_instance = Filter()
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Right", 4, 30, 2)
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Front Left", 4, 30, 2)
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Right", 4, 30, 2)
-        self.data = filter_instance.butter_lowpass_filter(self.data, "Rear Left", 4, 30, 2)
+        df = filter_instance.butter_lowpass_filter(df, "Front Right", 4, 30, 2)
+        df = filter_instance.butter_lowpass_filter(df, "Front Left", 4, 30, 2)
+        df = filter_instance.butter_lowpass_filter(df, "Rear Right", 4, 30, 2)
+        df = filter_instance.butter_lowpass_filter(df, "Rear Left", 4, 30, 2)
 
-    def convert_to_gs(self) -> DataFrame:
-        # convert the voltage to gs
-        pass
+        return df
 
-    def convert_time(self, data):
+    # todo return modifed dataframe that is passed in as an argument
+    def convert_xl_g(self):
+        for i, row in self.data2.iterrows():
+            self.data2.loc[i, "X"] = (row["X"]) * 0.51
+            self.data2.loc[i, "Y"] = (row["Y"]) * 0.51310
+            self.data2.loc[i, "Z"] = (row["Z"]) * 0.49
+
+    def convert_time(self, data: pd.DataFrame) -> pd.DataFrame:
         for i, row in data.iterrows():
             time_step = row["Time"]
             mlsec = repr(time_step).split(".")[1][:3]
             data.loc[i, "Time"] = time.strftime(
                 "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step)
             )
+        return data
+    

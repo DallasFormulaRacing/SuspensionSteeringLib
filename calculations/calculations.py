@@ -1,5 +1,5 @@
 import pandas as pd
-from calculations.constant_enum_23 import Constants as constants
+from calculations.constant_enum import Constants as constants
 
 
 class Calculations:
@@ -34,53 +34,70 @@ class Calculations:
     def calculate_velocity(self) -> float:
         pass
 
-    def calculate_forces_part_1(self) -> float:
-        return self.K_H * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] +
-                           self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"])
+    def calculate_wheel_loads(self, df: pd.DataFrame) -> pd.DataFrame:
+        print(self.K_H)
+        df_after_front_left = self.calculate_force_front_left(df)
+        df_after_front_right = self.calculate_force_front_right(df_after_front_left)
+        df_after_rear_left = self.calculate_force_rear_left(df_after_front_right)
+        return self.calculate_force_rear_right(df_after_rear_left)
 
-    def calculate_forces_part_2(self) -> float:
-        return self.K_P * (self.data["Front Left_lowpass"] + self.data["Front Right_lowpass"] -
-                           self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"])
+    def calculate_wheel_load_constants(self):
+        self.calculate_wheel_rate_front()
+        self.calculate_wheel_rate_rear()
+        self.calculate_wheel_rate_roll_front()
+        self.calculate_wheel_rate_roll_rear()
+        self.calculate_K_H_K_P()
+        self.calculate_K_R_K_W()
+        self.calculate_a_b()
+        self.calculate_q_w()
 
-    def calculate_forces_part_3_front(self) -> float:
-        return self.K_R * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] +
-                           self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"]) * self.q
+    def calculate_forces_part_1(self, df: pd.DataFrame) -> float:
+        return self.K_H * (df["Front Left_lowpass"] + df["Front Right_lowpass"] +
+                           df["Rear Left_lowpass"] + df["Rear Right_lowpass"])
 
-    def calculate_forces_part_3_rear(self) -> float:
-        return self.K_R * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] +
-                           self.data["Rear Left_lowpass"] - self.data["Rear Right_lowpass"]) * (1 - self.q)
+    def calculate_forces_part_2(self, df: pd.DataFrame) -> float:
+        return self.K_P * (df["Front Left_lowpass"] + df["Front Right_lowpass"] -
+                           df["Rear Left_lowpass"] - df["Rear Right_lowpass"])
 
-    def calculate_forces_part_4_front(self) -> float:
-        return self.K_W * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] -
-                           self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"]) * (1 - self.w)
+    def calculate_forces_part_3_front(self, df: pd.DataFrame) -> float:
+        return self.K_R * (df["Front Left_lowpass"] - df["Front Right_lowpass"] +
+                           df["Rear Left_lowpass"] - df["Rear Right_lowpass"]) * self.q
 
-    def calculate_forces_part_4_rear(self) -> float:
-        return self.K_W * (self.data["Front Left_lowpass"] - self.data["Front Right_lowpass"] -
-                           self.data["Rear Left_lowpass"] + self.data["Rear Right_lowpass"]) * self.w
+    def calculate_forces_part_3_rear(self, df: pd.DataFrame) -> float:
+        return self.K_R * (df["Front Left_lowpass"] - df["Front Right_lowpass"] +
+                           df["Rear Left_lowpass"] - df["Rear Right_lowpass"]) * (1 - self.q)
 
-    def calculate_force_front_left(self) -> float:
-        self.data["Force Front Left"] = constants.CORNER_WEIGHT_LF + 0.25 * (self.calculate_forces_part_1(
-        ) + self.calculate_forces_part_2() + self.calculate_forces_part_3_front() + self.calculate_forces_part_4_front())
-        return self.data["Force Front Left"]
+    def calculate_forces_part_4_front(self, df: pd.DataFrame) -> float:
+        return self.K_W * (df["Front Left_lowpass"] - df["Front Right_lowpass"] -
+                           df["Rear Left_lowpass"] + df["Rear Right_lowpass"]) * (1 - self.w)
 
-    def calculate_force_front_right(self) -> float:
-        self.data["Force Front Right"] = constants.CORNER_WEIGHT_RF + 0.25 * (self.calculate_forces_part_1(
-        ) + self.calculate_forces_part_2() - self.calculate_forces_part_3_front() - self.calculate_forces_part_4_front())
-        return self.data["Force Front Right"]
+    def calculate_forces_part_4_rear(self, df: pd.DataFrame) -> float:
+        return self.K_W * (df["Front Left_lowpass"] - df["Front Right_lowpass"] -
+                           df["Rear Left_lowpass"] + df["Rear Right_lowpass"]) * self.w
 
-    def calculate_force_rear_right(self) -> float:
-        self.data["Force Rear Right"] = constants.CORNER_WEIGHT_RR + 0.25 * (self.calculate_forces_part_1(
-        ) - self.calculate_forces_part_2() + self.calculate_forces_part_3_rear() - self.calculate_forces_part_4_rear())
-        return self.data["Force Rear Right"]
+    def calculate_force_front_left(self, df) -> pd.DataFrame:
+        df["Force Front Left"] = constants.CORNER_WEIGHT_LF + 0.25 * (self.calculate_forces_part_1(df
+        ) + self.calculate_forces_part_2(df) + self.calculate_forces_part_3_front(df) + self.calculate_forces_part_4_front(df))
+        return df
 
-    def calculate_force_rear_left(self) -> float:
-        self.data["Force Rear Left"] = constants.CORNER_WEIGHT_RL + 0.25 * (self.calculate_forces_part_1(
-        ) - self.calculate_forces_part_2() - self.calculate_forces_part_3_rear() - self.calculate_forces_part_4_rear())
-        return self.data["Force Rear Left"]
+    def calculate_force_front_right(self, df) -> pd.DataFrame:
+        df["Force Front Right"] = constants.CORNER_WEIGHT_RF + 0.25 * (self.calculate_forces_part_1(df
+        ) + self.calculate_forces_part_2(df) - self.calculate_forces_part_3_front(df) - self.calculate_forces_part_4_front(df))
+        return df
+
+    def calculate_force_rear_right(self, df) -> pd.DataFrame:
+        df["Force Rear Right"] = constants.CORNER_WEIGHT_RR + 0.25 * (self.calculate_forces_part_1(df
+        ) - self.calculate_forces_part_2(df) + self.calculate_forces_part_3_rear(df) - self.calculate_forces_part_4_rear(df))
+        return df
+
+    def calculate_force_rear_left(self, df) -> pd.DataFrame:
+        df["Force Rear Left"] = constants.CORNER_WEIGHT_RL + 0.25 * (self.calculate_forces_part_1(df
+        ) - self.calculate_forces_part_2(df) - self.calculate_forces_part_3_rear(df) - self.calculate_forces_part_4_rear(df))
+        return df
 
     def calculate_wheel_rate_front(self) -> float:
         self.wheel_rate_front = (
-            constants.SPRING_RATE_FRONT)/(constants.MOTION_RATIO_FRONT ** 2)
+            constants.SPRING_RATE_FRONT) / (constants.MOTION_RATIO_FRONT ** 2)
         return self.wheel_rate_front
 
     def calculate_wheel_rate_rear(self) -> float:
@@ -90,12 +107,12 @@ class Calculations:
 
     def calculate_wheel_rate_roll_front(self) -> float:
         self.wheel_rate_roll_front = (
-            constants.SPRING_RATE_ROLL_FRONT)/(constants.MOTION_RATIO_ROLL_FRONT ** 2)
+            constants.SPRING_RATE_ROLL_FRONT) / (constants.MOTION_RATIO_ROLL_FRONT ** 2)
         return self.wheel_rate_roll_front
 
     def calculate_wheel_rate_roll_rear(self) -> float:
         self.wheel_rate_roll_rear = (
-            constants.SPRING_RATE_ROLL_REAR)/(constants.MOTION_RATIO_ROLL_REAR ** 2)
+            constants.SPRING_RATE_ROLL_REAR) / (constants.MOTION_RATIO_ROLL_REAR ** 2)
         return self.wheel_rate_roll_rear
 
     def calculate_K_H_K_P(self) -> float:

@@ -3,7 +3,7 @@ from calculations.calculations import Calculations
 from plots.make_plot import make_plot
 import traceback
 
-conversions = Conversions("data/output2_linpot_2023-10-14_13-23-28.csv")
+conversions = Conversions("data/output2_linpot_2023-10-14_13-23-28.csv", "data/output2_analog_2023-10-14_13-18-15.csv") 
 calculations = Calculations("data/output2_linpot_2023-10-14_13-23-28.csv")
 
 
@@ -36,21 +36,27 @@ class handler:
         # plots.plot_wheel_load_vs_acceleration()
         plots.plot_wheel_load_vs_time()
 
-    def wheel_damper_handler(self):
-        # call the convert to mm method from conversions
-        displacement_df = calculations.calculate_displacement()
-        time_constant = calculations.calculate_time_constant()
-        velocity_df = calculations.calculate_velocities(displacement_df, time_constant)
-        print(velocity_df)
+    def linpot_handler(self):
+        conversions.clean_linpot_data()
+        conversions.convert_voltage_to_mm()
+        plots = make_plot(conversions.linpot_data)
+        plots.plot_linpot_vs_time()
 
+    def accel_handler(self):
+        conversions.convert_acel_to_g()
+        conversions.convert_time(conversions.acel_data)
+        plots = make_plot(conversions.acel_data)
+        plots.plot_accel_vs_time()
 
 def main():
     handler_instance = handler()
     try:
         handler_instance.wheel_load_handler()
-        handler_instance.wheel_damper_handler()
+        handler_instance.linpot_handler()
+        handler_instance.accel_handler()
     except Exception:
         traceback.print_exc()
+
 
 
 if __name__ == '__main__':

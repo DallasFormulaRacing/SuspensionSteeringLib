@@ -1,6 +1,6 @@
 import pandas as pd
 import deprecated.Visualizer as Visualizer
-import Depreciated.make_plot as make_plot
+import deprecated.make_plot as make_plot
 
 SPRING_RATE_FRONT = 200.0
 SPRING_RATE_REAR = 175.0

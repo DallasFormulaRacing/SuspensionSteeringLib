@@ -13,28 +13,25 @@ class handler:
 
     def wheel_load_handler(self):
         # loads and prepares initial data
-        # todo: return dataframe
-        df = conversions.data
-        df_xl = conversions.data2
-        df_converted = conversions.convert_voltage_to_in(df)
-        conversions.convert_xl_g()
-        df_cleaned = conversions.clean_data(df_converted)
+        data_linpot = conversions.data_linpot
+        data_accel = conversions.data_accel
+        data_linpot_converted = conversions.convert_voltage_to_in(data_linpot)
+        data_accel_converted = conversions.convert_xl_g(data_accel)
+        df_cleaned = conversions.clean_data(data_linpot_converted)
         calculations.data = df_cleaned
-        calculations.data2 = conversions.data2
-        df_xl_goal = calculations.data2
-
-        # calculating constants
+        calculations.data2 = conversions.data_accel
         calculations.calculate_wheel_load_constants()
         
         # calculates wheel load formulas in pounds of force
-        wheel_loads = calculations.calculate_wheel_loads(df_converted)
+        wheel_loads = calculations.calculate_wheel_loads(df_cleaned)
 
         conversions.convert_time(wheel_loads)
-        conversions.convert_time(df_xl_goal)
-        plots = make_plot(wheel_loads)
-        plots3 = make_plot(df_xl_goal)
-        plots.plot_wheel_load_vs_time()
-        return plots3.plot_wheel_load_vs_acceleration(wheel_loads)
+        conversions.convert_time(data_accel_converted)
+        plots_wheel_load = make_plot(wheel_loads)
+        plots_accel = make_plot(data_accel_converted)
+        plots_wheel_load.plot_wheel_load_vs_time(wheel_loads)
+        plots_accel.plot_acceleration_vs_time(data_accel_converted)
+        return plots_wheel_load.plot_wheel_load_vs_acceleration(data_accel_converted, wheel_loads)
 
     def wheel_damper_handler(self):
         # call the convert to mm method from conversions

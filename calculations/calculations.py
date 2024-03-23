@@ -77,22 +77,22 @@ class Calculations:
 
     def calculate_force_front_left(self, df) -> pd.DataFrame:
         df["Force Front Left"] = constants.CORNER_WEIGHT_LF + 0.25 * (self.calculate_forces_part_1(df
-        ) + self.calculate_forces_part_2(df) + self.calculate_forces_part_3_front(df) + self.calculate_forces_part_4_front(df))
+                                                                                                   ) + self.calculate_forces_part_2(df) + self.calculate_forces_part_3_front(df) + self.calculate_forces_part_4_front(df))
         return df
 
     def calculate_force_front_right(self, df) -> pd.DataFrame:
         df["Force Front Right"] = constants.CORNER_WEIGHT_RF + 0.25 * (self.calculate_forces_part_1(df
-        ) + self.calculate_forces_part_2(df) - self.calculate_forces_part_3_front(df) - self.calculate_forces_part_4_front(df))
+                                                                                                    ) + self.calculate_forces_part_2(df) - self.calculate_forces_part_3_front(df) - self.calculate_forces_part_4_front(df))
         return df
 
     def calculate_force_rear_right(self, df) -> pd.DataFrame:
         df["Force Rear Right"] = constants.CORNER_WEIGHT_RR + 0.25 * (self.calculate_forces_part_1(df
-        ) - self.calculate_forces_part_2(df) + self.calculate_forces_part_3_rear(df) - self.calculate_forces_part_4_rear(df))
+                                                                                                   ) - self.calculate_forces_part_2(df) + self.calculate_forces_part_3_rear(df) - self.calculate_forces_part_4_rear(df))
         return df
 
     def calculate_force_rear_left(self, df) -> pd.DataFrame:
         df["Force Rear Left"] = constants.CORNER_WEIGHT_RL + 0.25 * (self.calculate_forces_part_1(df
-        ) - self.calculate_forces_part_2(df) - self.calculate_forces_part_3_rear(df) - self.calculate_forces_part_4_rear(df))
+                                                                                                  ) - self.calculate_forces_part_2(df) - self.calculate_forces_part_3_rear(df) - self.calculate_forces_part_4_rear(df))
         return df
 
     def calculate_wheel_rate_front(self) -> float:
@@ -137,16 +137,3 @@ class Calculations:
                   (self.K_R - self.wheel_load_const_a)) - 1
         self.w = self.q
         return self.q
-
-
-def main():
-    # Replace with your actual filename
-    filename = 'data\\output2_linpot_2023-10-14_13-23-28.csv'
-    calculations = Calculations(filename)
-    df_with_displacement = calculations.calculate_displacement()
-    print(df_with_displacement)
-
-
-# Ensures that the main function is called only when this script is executed directly (not imported as a module)
-if __name__ == '__main__':
-    main()

@@ -28,8 +28,12 @@ class client:
 def main():
     client_instance = client()
     try:
-        pass
-        client_instance.wheel_load_handler()
+        # client.damper_velocity_vs_time_client()
+        # client.damper_force_vs_time_client()
+        client.wheel_load_client()
+        # client.linpot_vs_time_client()
+        # client.accel_vs_time_client()
+        # client.pitch_roll_client()
     except Exception:
         traceback.print_exc()
 

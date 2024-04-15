@@ -1,7 +1,8 @@
 import pandas as pd
 import time
-from ..Filter.filter import Filter
+from ..Filter.Filter import Filter
 from ..conversions.conversion_factor_enum import Constants as constants
+from ..calculations.calculations import Calculations
 
 # Add dampening to factor into the wheel loads. Depends on the velocity
 # Dampening is proportional to velocity and it's a linear relationship
@@ -18,7 +19,7 @@ class Conversions:
         self.filename = filename
         self.filename2 = filename2
         self.data_linpot = pd.DataFrame(pd.read_csv(filename))
-        self.data_accel = pd.DataFrame(pd.read_csv(filename2))
+        self.acel_data = pd.DataFrame(pd.read_csv(filename2))
 
         self.data_linpot = self.switch_columns(self.data_linpot)
 
@@ -43,20 +44,6 @@ class Conversions:
             }
         )
 
-    # converts voltage to mm
-    # todo return modifed dataframe that is passed in as an argument
-    def convert_voltage_to_mm(self):
-        for i, row in self.data_linpot.iterrows():
-            self.data_linpot.loc[i, "Front Right"] = (-(row["Front Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                      constants.LINPOT_CONVERSION_OFFSET)
-            self.data_linpot.loc[i, "Front Left"] = (-(row["Front Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                     constants.LINPOT_CONVERSION_OFFSET) 
-            self.data_linpot.loc[i, "Rear Right"] = (-(row["Rear Right"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                     constants.LINPOT_CONVERSION_OFFSET) 
-            self.data_linpot.loc[i, "Rear Left"] = (-(row["Rear Left"] * constants.LINPOT_CONVERSION_CONSTANT) +
-                                                    constants.LINPOT_CONVERSION_OFFSET)
-        return self.data_linpot
-
     # converts voltage to mm and then inches for as spring rates are in inches / pound
     def convert_voltage_to_in(self, df: pd.DataFrame) -> pd.DataFrame:
         for i, row in df.iterrows():
@@ -79,14 +66,27 @@ class Conversions:
 
         return df
 
-    # todo return modifed dataframe that is passed in as an argument
-    def convert_xl_g(self, df: pd.DataFrame) -> pd.DataFrame:
-        for i, row in df.iterrows():
-            df.loc[i, "X"] = (row["X"]) * constants.X_CONVERSION_CONSTANT_POS
-            df.loc[i, "Y"] = (row["Y"]) * constants.Y_CONVERSION_CONSTANT_POS
-            df.loc[i, "Z"] = (row["Z"]) * constants.Z_CONVERSION_CONSTANT_POS
-        
-        return df
+    def clean_acel_data(self):
+        filter = Filter()
+        self.acel_data = filter.butter_lowpass_filter(
+            self.acel_data, "X", 4, 30, 2)
+        self.acel_data = filter.butter_lowpass_filter(
+            self.acel_data, "Y", 4, 30, 2)
+        self.acel_data = filter.butter_lowpass_filter(
+            self.acel_data, "Z", 4, 30, 2)
+
+        return self.acel_data
+
+    def convert_acel_to_g(self) -> pd.DataFrame:
+
+        voltage_to_g = self.acel_data.copy()
+
+        for i, row in self.acel_data.iterrows():
+            voltage_to_g.loc[i, "X"] = (row["X"]) * 0.53
+            voltage_to_g.loc[i, "Y"] = (row["Y"]) * 0.53
+            voltage_to_g.loc[i, "Z"] = (row["Z"]) * 0.53
+
+        return voltage_to_g
 
     def convert_time(self, data: pd.DataFrame) -> pd.DataFrame:
         for i, row in data.iterrows():
@@ -98,3 +98,38 @@ class Conversions:
                 "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step))
 
         return data
+
+    def convert_voltage_to_mm(self) -> pd.DataFrame:
+
+        displacement_to_mm = self.data_linpot.copy()
+
+        for i, row in displacement_to_mm.iterrows():
+            displacement_to_mm.loc[i, "Front Right"] = (
+                row["Front Right"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            displacement_to_mm.loc[i, "Front Left"] = -(row["Front Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            displacement_to_mm.loc[i, "Rear Right"] = -(row["Rear Right"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+            displacement_to_mm.loc[i, "Rear Left"] = -(row["Rear Left"] * self.LINPOT_CONVERSION_CONSTANT) + self.LINPOT_CONVERSION_OFFSET
+
+        return displacement_to_mm
+
+    def generate_pitch_roll_df(self, low_pass_data) -> pd.DataFrame:
+
+        time = low_pass_data["Time"]
+        x = low_pass_data["X_lowpass"]  # Accelerometer x values
+        y = low_pass_data["Y_lowpass"]  # Accelerometer y values
+        z = low_pass_data["Z_lowpass"]  # Accelerometer z values
+
+        # Calculate pitch and roll angles
+        pitch = []
+        roll = []
+        for i in range(len(x)):
+            p, r = Calculations.calculate_pitch_roll_angles(x[i], y[i], z[i])
+            pitch.append(p)
+            roll.append(r)
+
+        pitch_roll_df = pd.DataFrame({
+            'Time': time,
+            'Pitch': pitch,
+            'Roll': roll
+        })
+        return pitch_roll_df

@@ -21,19 +21,57 @@ class client:
 
         # calculates wheel load formulas in pounds of force
         wheel_loads = calculations.calculate_wheel_loads(df_cleaned).copy()
- 
+
         plots_wheel_load = make_plot(wheel_loads)
         return plots_wheel_load.plot_wheel_load_vs_time(wheel_loads)
+
+    def damper_velocity_vs_time_client(self):
+        velocity_df = calculations.calculate_velocities()
+        plots = make_plot(velocity_df)
+        fig = plots.plot_wheel_velocity_vs_time()
+        #fig.show()
+        return fig
+
+    def damper_force_vs_time_client(self):
+        dampening_force_df = calculations.estimate_damping_force()
+        plots = make_plot(dampening_force_df)
+        fig = plots.plot_damper_force_vs_velocity()
+        #fig.show()
+        return fig
+
+    def linpot_vs_time_client(self):
+        converted_data = conversions.convert_voltage_to_mm()
+        plots = make_plot(converted_data)
+        fig = plots.plot_linpot_vs_time()
+        #fig.show()
+        return fig
+
+    def accel_vs_time_client(self):
+        accel_g = conversions.convert_acel_to_g()
+        print(accel_g)
+        plots = make_plot(accel_g)
+        fig = plots.plot_accel_vs_time()
+        #fig.show()
+        return fig
+
+    def pitch_roll_client(self):
+        x_y_z_low_pass_data = conversions.clean_acel_data()
+        pitch_roll = conversions.generate_pitch_roll_df(x_y_z_low_pass_data)
+        plots = make_plot(pitch_roll)
+        fig = plots.plot_pitch_roll_vs_time()
+        #fig.show()
+        return fig
+
 
 def main():
     client_instance = client()
     try:
-        # client.damper_velocity_vs_time_client()
-        # client.damper_force_vs_time_client()
-        client.wheel_load_client()
-        # client.linpot_vs_time_client()
-        # client.accel_vs_time_client()
-        # client.pitch_roll_client()
+        client_instance.damper_velocity_vs_time_client()
+        #client_instance.damper_force_vs_time_client()
+        client_instance.wheel_load_client()
+        client_instance.linpot_vs_time_client()
+        client_instance.accel_vs_time_client()
+        client_instance.pitch_roll_client()
     except Exception:
         traceback.print_exc()
 

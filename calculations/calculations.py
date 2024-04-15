@@ -35,7 +35,6 @@ class Calculations:
         pass
 
     def calculate_wheel_loads(self, df: pd.DataFrame) -> pd.DataFrame:
-        print(self.K_H)
         df_after_front_left = self.calculate_force_front_left(df)
         df_after_front_right = self.calculate_force_front_right(df_after_front_left)
         df_after_rear_left = self.calculate_force_rear_left(df_after_front_right)

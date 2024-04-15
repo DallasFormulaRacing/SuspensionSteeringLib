@@ -17,13 +17,11 @@ class client:
         data_linpot_converted = conversions.convert_voltage_to_in(data_linpot)
         df_cleaned = conversions.clean_data(data_linpot_converted)
         calculations.data = df_cleaned
-        #calculations.data2 = conversions.data_accel
         calculations.calculate_wheel_load_constants()
 
         # calculates wheel load formulas in pounds of force
         wheel_loads = calculations.calculate_wheel_loads(df_cleaned).copy()
-
-        #wheel_loads_copy = conversions.convert_time(wheel_loads).copy()     
+ 
         plots_wheel_load = make_plot(wheel_loads)
         return plots_wheel_load.plot_wheel_load_vs_time(wheel_loads)
 
@@ -31,7 +29,7 @@ def main():
     client_instance = client()
     try:
         pass
-        #client_instance.wheel_load_handler()
+        client_instance.wheel_load_handler()
     except Exception:
         traceback.print_exc()
 

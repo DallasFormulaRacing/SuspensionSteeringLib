@@ -33,9 +33,9 @@ class make_plot:
                       "Velocity Rear Right", "Velocity Rear Left"], title='Wheel Velocity vs Time')
         return fig
 
-    def plot_damper_force_vs_velocity(self):
+    def plot_damper_force_vs_time(self):
 
         fig = px.line(self.data, x="Time",
                       y=["Damping Force Front Right", "Damping Force Front Left", "Damping Force Rear Right", "Damping Force Rear Left"],
-                      title='Damper Force vs Velocity')
+                      title='Damper Force vs time')
         return fig

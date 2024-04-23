@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-from ..Filter.Filter import Filter
+from ..Filter.filter import Filter
 from ..conversions.conversion_factor_enum import Constants as constants
 from ..calculations.calculations import Calculations
 

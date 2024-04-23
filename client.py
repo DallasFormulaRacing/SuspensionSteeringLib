@@ -35,7 +35,7 @@ class client:
     def damper_force_vs_time_client(self):
         dampening_force_df = calculations.estimate_damping_force()
         plots = make_plot(dampening_force_df)
-        fig = plots.plot_damper_force_vs_velocity()
+        fig = plots.plot_damper_force_vs_time()
         #fig.show()
         return fig
 
@@ -67,7 +67,7 @@ def main():
     client_instance = client()
     try:
         client_instance.damper_velocity_vs_time_client()
-        #client_instance.damper_force_vs_time_client()
+        client_instance.damper_force_vs_time_client()
         client_instance.wheel_load_client()
         client_instance.linpot_vs_time_client()
         client_instance.accel_vs_time_client()

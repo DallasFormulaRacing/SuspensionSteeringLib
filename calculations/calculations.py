@@ -48,6 +48,22 @@ class Calculations:
         time_const = self.calculate_time_constant()
         return displacement / time_const
 
+    def calculate_accelerations(self) -> pd.DataFrame:
+
+        time_const = self.calculate_time_constant()
+        accelerations_df = self.calculate_velocities()
+
+        accelerations_df['Acceleration Front Right'] = accelerations_df['Velocity Front Right'].diff(
+        ).fillna(0) / time_const
+        accelerations_df['Acceleration Front Left'] = accelerations_df['Velocity Front Left'].diff(
+        ).fillna(0) / time_const
+        accelerations_df['Acceleration Rear Right'] = accelerations_df['Velocity Rear Right'].diff(
+        ).fillna(0) / time_const
+        accelerations_df['Acceleration Rear Left'] = accelerations_df['Velocity Rear Left'].diff(
+        ).fillna(0) / time_const
+            
+        return accelerations_df
+    
     def estimate_damping_force(self) -> pd.DataFrame:
 
         dampening_df = self.calculate_velocities()

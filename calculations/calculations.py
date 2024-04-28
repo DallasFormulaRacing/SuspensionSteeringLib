@@ -4,8 +4,8 @@ from ..calculations.constants import Constants as constants
 
 
 class Calculations:
-    def __init__(self, filename: str):
-        self.linpot_dataframe = pd.DataFrame(pd.read_csv(filename))
+    def __init__(self, dataframe: pd.DataFrame):
+        self.linpot_dataframe = dataframe
 
     def calculate_displacement(self) -> pd.DataFrame:
 
@@ -23,14 +23,14 @@ class Calculations:
         return displacement_df
 
     def calculate_time_constant(self) -> float:
-        time_const = self.linpot_dataframe.loc[0, "Time"] - self.linpot_dataframe.loc[1, "Time"]
+        time_const = self.linpot_dataframe.loc[0, "timestamp"].timestamp() - self.linpot_dataframe.loc[1, "timestamp"].timestamp()
         return time_const
 
     def calculate_velocities(self) -> pd.DataFrame:
 
         displacement_df = self.calculate_displacement()
 
-        print(displacement_df)
+        #print(displacement_df)
 
         for i, row in displacement_df.iterrows():
             displacement_df.loc[i, 'Velocity Front Right'] = self.calculate_velocity(
@@ -174,16 +174,3 @@ class Calculations:
         # Yaw is not directly calculable from accelerometer data
 
         return pitch, roll
-
-
-def main():
-    # Replace with your actual filename
-    filename = 'data\\output2_linpot_2023-10-14_13-23-28.csv'
-    calculations = Calculations(filename)
-    df_with_displacement = calculations.calculate_displacement()
-    print(df_with_displacement)
-
-
-# Ensures that the main function is called only when this script is executed directly (not imported as a module)
-if __name__ == '__main__':
-    main()

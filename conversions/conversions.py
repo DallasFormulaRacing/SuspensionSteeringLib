@@ -15,20 +15,17 @@ class Conversions:
     MM_TO_IN_CONVERSION_FACTOR = 0.0393701
     ACCEL_G_CONSTANT = 1.0
 
-    def __init__(self, filename: str, filename2: str):
-        self.filename = filename
-        self.filename2 = filename2
-        self.data_linpot = pd.DataFrame(pd.read_csv(filename))
-        self.acel_data = pd.DataFrame(pd.read_csv(filename2))
-
-        self.data_linpot = self.switch_columns(self.data_linpot)
+    def __init__(self, dataframe: pd.DataFrame):
+        self.data = dataframe
+        #self.acel_data = pd.DataFrame(pd.read_csv(filename))
 
     def switch_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.rename(
             columns={
-                "Front Right": "Front Left",
-                "Front Left": "Rear Left",
-                "Rear Left": "Front Right",
+                "front_right": "Front Left",
+                "front_left": "Rear Left",
+                "rear_left": "Front Right",
+                "rear_right": "Rear Right"
             }
         )
         return df
@@ -57,7 +54,7 @@ class Conversions:
                                       constants.LINPOT_CONVERSION_OFFSET) * constants.MM_TO_IN_CONVERSION_FACTOR
         return df
 
-    def clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
+    def clean_linpot_data(self, df: pd.DataFrame) -> pd.DataFrame:
         filter_instance = Filter()
         df = filter_instance.butter_lowpass_filter(df, "Front Right", 4, 30, 2)
         df = filter_instance.butter_lowpass_filter(df, "Front Left", 4, 30, 2)
@@ -68,20 +65,20 @@ class Conversions:
 
     def clean_acel_data(self):
         filter = Filter()
-        self.acel_data = filter.butter_lowpass_filter(
-            self.acel_data, "X", 4, 30, 2)
-        self.acel_data = filter.butter_lowpass_filter(
+        self.data = filter.butter_lowpass_filter(
+            self.data, "X", 4, 30, 2)
+        self.data = filter.butter_lowpass_filter(
             self.acel_data, "Y", 4, 30, 2)
-        self.acel_data = filter.butter_lowpass_filter(
-            self.acel_data, "Z", 4, 30, 2)
+        self.data = filter.butter_lowpass_filter(
+            self.data, "Z", 4, 30, 2)
 
-        return self.acel_data
+        return self.data
 
     def convert_acel_to_g(self) -> pd.DataFrame:
 
-        voltage_to_g = self.acel_data.copy()
+        voltage_to_g = self.data.copy()
 
-        for i, row in self.acel_data.iterrows():
+        for i, row in self.data.iterrows():
             voltage_to_g.loc[i, "X"] = (row["X"]) * 0.53
             voltage_to_g.loc[i, "Y"] = (row["Y"]) * 0.53
             voltage_to_g.loc[i, "Z"] = (row["Z"]) * 0.53
@@ -90,18 +87,18 @@ class Conversions:
 
     def convert_time(self, data: pd.DataFrame) -> pd.DataFrame:
         for i, row in data.iterrows():
-            time_step = row["Time"]
+            time_step = row["timestamp"]
             if isinstance(time_step, str):
                 break
             mlsec = repr(time_step).split(".")[1][:3]
-            data.loc[i, "Time"] = time.strftime(
+            data.loc[i, "timestamp"] = time.strftime(
                 "%H:%M:%S.{} %Z".format(mlsec), time.localtime(time_step))
 
         return data
 
     def convert_voltage_to_mm(self) -> pd.DataFrame:
 
-        displacement_to_mm = self.data_linpot.copy()
+        displacement_to_mm = self.data.copy()
 
         for i, row in displacement_to_mm.iterrows():
             displacement_to_mm.loc[i, "Front Right"] = (
